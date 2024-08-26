@@ -2,6 +2,8 @@ workspace {
 
     model {
         user = person "User" 
+        S1 = softwareSystem "cUrl"
+        S2 = softwareSystem "Tg Bot"
         S = softwareSystem "Url Shortener" {
             api = container "API"
             EventBus = container "EventBus"
@@ -15,19 +17,27 @@ workspace {
                 tags "DataBase"
             }
             
-            api -> EventBus
-            EventBus -> AnalyticsServer
-            EventBus -> AnalyticsDB
-            EventBus -> BackEnd
-            BackEnd -> DataBase
-            BackEnd -> cache
+            S1 -> api "sending request"
+            S2 -> api "sending request"
+            api -> EventBus "sending data"
+            EventBus -> AnalyticsServer "sending data"
+            EventBus -> AnalyticsDB "retrieving or writing data"
+            EventBus -> BackEnd "sending data"
+            BackEnd -> DataBase "retrieving or writing data"
+            BackEnd -> cache "checking the cache for the necessary data"
         }
-        user -> S "Uses"
+        user -> S1 "Uses"
+        user -> S2 "Uses"
+        S1 -> S "sending requests"
+        S2 -> S "sending requests"
     }
 
     views {
-        systemContext S {
-            include *
+        dynamic * {
+            user -> S1
+            user -> S2
+            S1 -> S
+            S2 -> S
             autolayout tb
         } 
         
