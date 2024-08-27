@@ -19,11 +19,11 @@
 
 ### System 
 
-![architecture/plantuml/structurizr-Dynamic-001.puml](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://github.com/deadonted/My_Project/blob/architecture/architecture/plantuml/structurizr-Dynamic-001.puml)
+![architecture/plantuml/structurizr-Dynamic-001.puml](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.github.com/deadonted/My_Project/blob/architecture/architecture/plantuml/structurizr-Dynamic-001.puml)
 
 ### Container
 
-![architecture/plantuml/structurizr-Container-001.puml](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://github.com/deadonted/My_Project/blob/architecture/architecture/plantuml/structurizr-Container-001.puml)
+![architecture/plantuml/structurizr-Container-001.puml](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.github.com/deadonted/My_Project/blob/architecture/architecture/plantuml/structurizr-Container-001.puml)
 
 ### cURL
 
