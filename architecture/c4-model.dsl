@@ -2,10 +2,14 @@ workspace {
 
     model {
         user = person "User" 
-        S1 = softwareSystem "cUrl"
-        S2 = softwareSystem "Tg Bot"
+        S1 = softwareSystem "cUrl" {
+            tags S1
+        }
+        S2 = softwareSystem "Tg Bot" {
+            tags S1
+        }
         S = softwareSystem "Url Shortener" {
-            api = container "API"
+            api = container "API" 
             EventBus = container "EventBus"
             AnalyticsServer = container "AnalyticsServer"
             AnalyticsDB = container "AnalyticsDB" {
@@ -51,14 +55,17 @@ workspace {
                 color white
             }
             element "Software System" {
-                background #2D882D
+                background #9c9c06
+            }
+            element "S1" {
+                background #5e5e5d
             }
             element "Person" {
-                background #116611
+                background #6b5802
                 shape person
             }
             element "Container" {
-                background #55aa55
+                background #b8b804
             }
             element "DataBase" {
                 shape cylinder

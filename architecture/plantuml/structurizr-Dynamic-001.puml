@@ -1,0 +1,52 @@
+@startuml
+set separator none
+title Dynamic
+
+top to bottom direction
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+}
+
+hide stereotype
+
+skinparam rectangle<<TgBot>> {
+  BackgroundColor #5e5e5d
+  FontColor #ffffff
+  BorderColor #414141
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<UrlShortener>> {
+  BackgroundColor #9c9c06
+  FontColor #ffffff
+  BorderColor #6d6d04
+  roundCorner 20
+  shadowing false
+}
+skinparam person<<User>> {
+  BackgroundColor #6b5802
+  FontColor #ffffff
+  BorderColor #4a3d01
+  shadowing false
+}
+skinparam rectangle<<cUrl>> {
+  BackgroundColor #5e5e5d
+  FontColor #ffffff
+  BorderColor #414141
+  roundCorner 20
+  shadowing false
+}
+
+person "==User\n<size:10>[Person]</size>" <<User>> as User
+rectangle "==cUrl\n<size:10>[Software System]</size>" <<cUrl>> as cUrl
+rectangle "==Tg Bot\n<size:10>[Software System]</size>" <<TgBot>> as TgBot
+rectangle "==Url Shortener\n<size:10>[Software System]</size>" <<UrlShortener>> as UrlShortener
+User .[#707070,thickness=2].> cUrl : "<color:#707070>1. Uses"
+User .[#707070,thickness=2].> TgBot : "<color:#707070>2. Uses"
+cUrl .[#707070,thickness=2].> UrlShortener : "<color:#707070>3. sending request"
+TgBot .[#707070,thickness=2].> UrlShortener : "<color:#707070>4. sending request"
+@enduml
