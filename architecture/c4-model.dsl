@@ -58,7 +58,7 @@ workspace {
                 background #9c9c06
             }
             element "S1" {
-                background #5e5e5d
+                background #aa98a9
             }
             element "Person" {
                 background #6b5802
