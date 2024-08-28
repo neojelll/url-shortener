@@ -14,5 +14,5 @@ jobs:
         - uses: sebastienfi/structurizr-gen-images@v1
           with:
             repo-token: ${{ secrets.TOKEN_STRUCTURIZR }} 
-            workspace-path: architecture/c4-model.dsl # This setting will have the action generate images from this DSL. Set the location of your DSL.
-            output-path: architecture/diagrams/ # The output folder for generated images.
+            workspace-path: architecture/c4-model.dsl
+            output-path: architecture/diagrams/
