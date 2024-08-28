@@ -1,0 +1,174 @@
+14:24:38.447 [main] INFO  d.s.c.ls.C4LanguageServerLauncher - Starting Socket Connection
+14:24:38.459 [main] INFO  d.s.c.ls.C4LanguageServerLauncher - READY_TO_CONNECT
+14:24:38.466 [main] INFO  d.s.c.ls.C4LanguageServerLauncher - Launching C4LanguageServer started
+14:24:38.579 [main] INFO  d.s.c.ls.service.C4LanguageServer - getTextDocumentService
+14:24:38.615 [main] INFO  d.s.c.ls.service.C4LanguageServer - getTextDocumentService
+14:24:38.617 [main] INFO  d.s.c.ls.service.C4LanguageServer - getWorkspaceService
+14:24:38.622 [main] INFO  d.s.c.ls.service.C4LanguageServer - connect
+14:24:38.646 [pool-1-thread-1] INFO  d.s.c.ls.service.C4LanguageServer - initialize
+14:24:38.663 [pool-1-thread-1] INFO  d.s.c.l.s.C4TextDocumentService - didOpen file:///Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.664 [ForkJoinPool.commonPool-worker-1] INFO  d.s.c.l.s.C4TextDocumentService - --> getDiagnostics 0
+14:24:38.666 [ForkJoinPool.commonPool-worker-2] INFO  d.s.c.ls.service.C4WorkspaceService - executeCommand c4-server.autoformat.indent
+14:24:38.668 [pool-1-thread-1] INFO  d.s.c.l.s.C4TextDocumentService - documentColor
+14:24:38.669 [ForkJoinPool.commonPool-worker-2] INFO  d.s.c.l.s.C4TextDocumentService - --> getDocument
+14:24:38.674 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - createModel /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.675 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - Parsing...
+14:24:38.686 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 1, contextId: 281393194, contextName WorkspaceDslContext
+14:24:38.686 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.686 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 3, contextId: 257491414, contextName ModelDslContext
+14:24:38.686 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.687 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: user, modelId: 1 at linenumber: C4-Model.dsl, 4
+14:24:38.687 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.687 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: S1, modelId: 2 at linenumber: C4-Model.dsl, 5
+14:24:38.687 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.687 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 5, contextId: 353247897, contextName SoftwareSystemDslContext
+14:24:38.687 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.688 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 7, contextId: 353247897, contextName SoftwareSystemDslContext
+14:24:38.688 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.689 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: S2, modelId: 3 at linenumber: C4-Model.dsl, 8
+14:24:38.689 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.689 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 8, contextId: 1514507949, contextName SoftwareSystemDslContext
+14:24:38.689 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.689 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 10, contextId: 1514507949, contextName SoftwareSystemDslContext
+14:24:38.689 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.690 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: S, modelId: 4 at linenumber: C4-Model.dsl, 11
+14:24:38.690 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.690 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 11, contextId: 1556781020, contextName SoftwareSystemDslContext
+14:24:38.690 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.690 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: api, modelId: 5 at linenumber: C4-Model.dsl, 12
+14:24:38.690 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.690 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: EventBus, modelId: 6 at linenumber: C4-Model.dsl, 13
+14:24:38.690 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.691 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: AnalyticsServer, modelId: 7 at linenumber: C4-Model.dsl, 14
+14:24:38.691 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.691 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: AnalyticsDB, modelId: 8 at linenumber: C4-Model.dsl, 15
+14:24:38.691 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.691 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 15, contextId: 447948699, contextName ContainerDslContext
+14:24:38.691 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.691 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 17, contextId: 447948699, contextName ContainerDslContext
+14:24:38.691 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.691 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: BackEnd, modelId: 9 at linenumber: C4-Model.dsl, 18
+14:24:38.691 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.692 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: cache, modelId: 10 at linenumber: C4-Model.dsl, 19
+14:24:38.692 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.692 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedModelElement identifier: DataBase, modelId: 11 at linenumber: C4-Model.dsl, 20
+14:24:38.692 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.692 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 20, contextId: 347513260, contextName ContainerDslContext
+14:24:38.692 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.692 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 22, contextId: 347513260, contextName ContainerDslContext
+14:24:38.692 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.694 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 2->5, identifier: null, at linenumber: C4-Model.dsl, 24
+14:24:38.694 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.695 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 3->5, identifier: null, at linenumber: C4-Model.dsl, 25
+14:24:38.695 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.695 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 5->6, identifier: null, at linenumber: C4-Model.dsl, 26
+14:24:38.695 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.695 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 6->7, identifier: null, at linenumber: C4-Model.dsl, 27
+14:24:38.695 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.695 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 6->8, identifier: null, at linenumber: C4-Model.dsl, 28
+14:24:38.695 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.695 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 6->9, identifier: null, at linenumber: C4-Model.dsl, 29
+14:24:38.695 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 9->11, identifier: null, at linenumber: C4-Model.dsl, 30
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 9->10, identifier: null, at linenumber: C4-Model.dsl, 31
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 32, contextId: 1556781020, contextName SoftwareSystemDslContext
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 1->2, identifier: null, at linenumber: C4-Model.dsl, 33
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 1->3, identifier: null, at linenumber: C4-Model.dsl, 34
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 2->4, identifier: null, at linenumber: C4-Model.dsl, 35
+14:24:38.696 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.697 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedRelationShip 3->4, identifier: null, at linenumber: C4-Model.dsl, 36
+14:24:38.697 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.697 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 37, contextId: 257491414, contextName ModelDslContext
+14:24:38.697 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.697 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 39, contextId: 537468082, contextName ViewsDslContext
+14:24:38.697 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.703 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedView View: Dynamic-001 at linenumber C4-Model.dsl, 40
+14:24:38.703 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.703 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 40, contextId: 1953598884, contextName DynamicViewDslContext
+14:24:38.703 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.704 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 46, contextId: 1953598884, contextName DynamicViewDslContext
+14:24:38.704 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.705 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedView View: Container-001 at linenumber C4-Model.dsl, 48
+14:24:38.705 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.705 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 48, contextId: 115913098, contextName ContainerViewDslContext
+14:24:38.705 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.709 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 51, contextId: 115913098, contextName ContainerViewDslContext
+14:24:38.709 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.712 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 53, contextId: 1633776469, contextName StylesDslContext
+14:24:38.712 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.713 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 54, contextId: 2070633953, contextName ElementStyleDslContext
+14:24:38.713 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.714 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedColor at linenumber C4-Model.dsl, 55
+14:24:38.714 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.714 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 56, contextId: 2070633953, contextName ElementStyleDslContext
+14:24:38.714 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.714 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 57, contextId: 1393823184, contextName ElementStyleDslContext
+14:24:38.714 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.714 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedColor at linenumber C4-Model.dsl, 58
+14:24:38.714 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.714 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 59, contextId: 1393823184, contextName ElementStyleDslContext
+14:24:38.714 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.715 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 60, contextId: 1968503327, contextName ElementStyleDslContext
+14:24:38.715 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.715 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedColor at linenumber C4-Model.dsl, 61
+14:24:38.715 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.715 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 62, contextId: 1968503327, contextName ElementStyleDslContext
+14:24:38.715 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.715 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 63, contextId: 505256339, contextName ElementStyleDslContext
+14:24:38.715 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.715 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedColor at linenumber C4-Model.dsl, 64
+14:24:38.715 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 66, contextId: 505256339, contextName ElementStyleDslContext
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 67, contextId: 826105824, contextName ElementStyleDslContext
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onParsedColor at linenumber C4-Model.dsl, 68
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 69, contextId: 826105824, contextName ElementStyleDslContext
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 70, contextId: 1557176607, contextName ElementStyleDslContext
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.716 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 72, contextId: 1557176607, contextName ElementStyleDslContext
+14:24:38.717 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.717 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onStartContext: C4-Model.dsl at linenumber 73, contextId: 223367323, contextName ElementStyleDslContext
+14:24:38.717 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.717 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 75, contextId: 223367323, contextName ElementStyleDslContext
+14:24:38.717 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.717 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 76, contextId: 1633776469, contextName StylesDslContext
+14:24:38.717 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.719 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 79, contextId: 537468082, contextName ViewsDslContext
+14:24:38.719 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.719 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - onEndContext: C4-Model.dsl at linenumber 81, contextId: 281393194, contextName WorkspaceDslContext
+14:24:38.719 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.719 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - Parsing finished
+14:24:38.719 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c4dsl.ls.model.C4DocumentModel - setWorkspace Name
+14:24:38.719 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c4dsl.ls.model.C4DocumentModel - setValid true
+14:24:38.720 [ForkJoinPool.commonPool-worker-1] INFO  d.s.c.l.s.C4TextDocumentService - <-- getDiagnostics
+14:24:38.720 [ForkJoinPool.commonPool-worker-2] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.720 [ForkJoinPool.commonPool-worker-2] INFO  d.s.c.l.s.C4TextDocumentService - <-- getDocument
+14:24:38.720 [ForkJoinPool.commonPool-worker-2] DEBUG d.s.c.ls.provider.C4ColorProvider - calcDocumentColors file:/Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:38.720 [ForkJoinPool.commonPool-worker-2] DEBUG d.s.c.ls.provider.C4ColorProvider -                    [55, 58, 61, 64, 68]
+14:24:38.720 [ForkJoinPool.commonPool-worker-2] ERROR d.s.c.ls.provider.C4ColorProvider - Cannot provider color information: StringIndexOutOfBoundsException, begin -1, end 6, length 27
+14:24:39.172 [pool-1-thread-1] INFO  d.s.c.l.s.C4TextDocumentService - semanticTokensFull
+14:24:39.173 [ForkJoinPool.commonPool-worker-1] INFO  d.s.c.l.s.C4TextDocumentService - --> getDocument
+14:24:39.173 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:39.173 [ForkJoinPool.commonPool-worker-1] INFO  d.s.c.l.s.C4TextDocumentService - <-- getDocument
+14:24:39.187 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.l.p.C4SemanticTokenProvider - Semantik Tokens at [23, 12, 2, 14, 0, 0, 6, 3, 14, 0, 1, 12, 2, 14, 0, 0, 6, 3, 14, 0, 1, 12, 3, 14, 0, 0, 7, 8, 14, 0, 1, 12, 8, 14, 0, 0, 12, 15, 14, 0, 1, 12, 8, 14, 0, 0, 12, 11, 14, 0, 1, 12, 8, 14, 0, 0, 12, 7, 14, 0, 1, 12, 7, 14, 0, 0, 11, 8, 14, 0, 1, 12, 7, 14, 0, 0, 11, 5, 14, 0, 2, 8, 4, 14, 0, 0, 8, 2, 14, 0, 1, 8, 4, 14, 0, 0, 8, 2, 14, 0, 1, 8, 2, 14, 0, 0, 6, 1, 14, 0, 1, 8, 2, 14, 0, 0, 6, 1, 14, 0, 12, 18, 1, 14, 0]
+14:24:39.225 [pool-1-thread-1] INFO  d.s.c.l.s.C4TextDocumentService - codeLens
+14:24:39.225 [ForkJoinPool.commonPool-worker-1] INFO  d.s.c.l.s.C4TextDocumentService - --> getDocument
+14:24:39.225 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:39.225 [ForkJoinPool.commonPool-worker-1] INFO  d.s.c.l.s.C4TextDocumentService - <-- getDocument
+14:24:40.120 [pool-1-thread-1] INFO  d.s.c.ls.service.C4LanguageServer - setTrace off
+14:24:44.445 [pool-1-thread-1] INFO  d.s.c.l.s.C4TextDocumentService - codeLens
+14:24:44.446 [ForkJoinPool.commonPool-worker-1] INFO  d.s.c.l.s.C4TextDocumentService - --> getDocument
+14:24:44.446 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:44.446 [ForkJoinPool.commonPool-worker-1] INFO  d.s.c.l.s.C4TextDocumentService - <-- getDocument
+14:24:48.869 [pool-1-thread-1] INFO  d.s.c.l.s.C4TextDocumentService - codeLens
+14:24:48.871 [ForkJoinPool.commonPool-worker-1] INFO  d.s.c.l.s.C4TextDocumentService - --> getDocument
+14:24:48.871 [ForkJoinPool.commonPool-worker-1] DEBUG d.s.c.ls.model.C4DocumentManager - getModel file: /Users/timofei/My_Project/Architecture/C4-Model.dsl
+14:24:48.871 [ForkJoinPool.commonPool-worker-1] INFO  d.s.c.l.s.C4TextDocumentService - <-- getDocument
