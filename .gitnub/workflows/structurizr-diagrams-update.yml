@@ -1,20 +1,22 @@
 name: Update Structurizr Diagrams
 
-on: workflow_dispatch
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - architecture/c4-model.dsl
 
 jobs:
     update-diagrams:
         runs-on: ubuntu-latest
         container: ghcr.io/sebastienfi/structurizr-cli-with-bonus:latest
         permissions: 
-          contents: write # Allow to work with the contents of the repository, including git push.
+          contents: write 
         steps:
         - uses: sebastienfi/structurizr-gen-images@v1
           with:
-            repo-token: ${{ secrets.TOKEN_STRUCTURIZR }} # This token will be used by the action to perform git pull, git push, pr read, pr comment, pr comment edit, pr comment reaction.
+            repo-token: ${{ secrets.TOKEN_STRUCTURIZR }} 
             workspace-path: 'architecture/c4-model.dsl' # This setting will have the action generate images from this DSL. Set the location of your DSL.
             output-path: 'architecture/diagrams/' # The output folder for generated images.
