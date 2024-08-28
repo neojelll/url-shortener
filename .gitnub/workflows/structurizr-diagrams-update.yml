@@ -3,10 +3,6 @@ name: Update Structurizr Diagrams
 on:
   workflow_dispatch:
   pull_request:
-    branches:
-      - main
-    paths:
-      - architecture/c4-model.dsl
 
 jobs:
     update-diagrams:
