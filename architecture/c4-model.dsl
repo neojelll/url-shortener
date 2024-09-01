@@ -9,15 +9,15 @@ workspace {
             tags S1
         }
         S = softwareSystem "Url Shortener" "Shorten URLs\nRedirect URLs" {
-            api = container "API" "Handles and routes HTTP requests"
-            EventBus = container "EventBus" "Handles event routing and delivery\nProcesses URL generation requests"
+            api = container "API" "Handles and routes HTTP requests" "FastAPI"
+            EventBus = container "EventBus" "Handles event routing and delivery\nProcesses URL generation requests" "Kafka"
             AnalyticsServer = container "AnalyticsServer" "Track usage\nGenerate reports"
-            AnalyticsDB = container "AnalyticsDatabase" "Stores usage data" {
+            AnalyticsDB = container "AnalyticsDatabase" "Stores usage data" "Prometheus" {
                 tags "AnalyticsDataBase"
             }
             BackEnd = container "BackEnd"
-            cache = container "Cache" "Stored frequently requested URLs"
-            DataBase = container " Url DataBase" "Stores original and shortened URLs\nStores expiration" {
+            cache = container "Cache" "Stored frequently requested URLs" "Redis"
+            DataBase = container " Url DataBase" "Stores original and shortened URLs\nStores expiration" "PostrgeSQL" {
                 tags "DataBase"
             }
             ExpirationManager = container "Expiration Manager" "Checks for expired URLs in URL Database\nRemoves them"
