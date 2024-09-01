@@ -15,7 +15,7 @@ workspace {
             AnalyticsDB = container "AnalyticsDatabase" "Stores usage data" "Prometheus" {
                 tags "AnalyticsDataBase"
             }
-            BackEnd = container "URL Shortener Service" "Python"
+            BackEnd = container "URL Shortener Service" "Shorten URLs\nRedirect URLs" "Python"
             cache = container "URL Cache" "Stored frequently requested URLs" "Redis"
             DataBase = container "URL DataBase" "Stores original and shortened URLs\nStores expiration" "PostrgeSQL" {
                 tags "DataBase"
