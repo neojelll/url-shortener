@@ -15,6 +15,15 @@
 * При использовании короткой ссылки будет перенаправлен по оригинальной
 * Если время ссылки истекло, пользователь получит в ответ статическую страницу с информацией о том что ссылка не существовала либо уже не валидна
 
+## Architecture
+
+### System 
+
+![System](architecture/diagrams/structurizr-Dynamic-001.png)
+
+### Container
+
+![Container](architecture/diagrams/structurizr-Container-001.png)
 
 ### cURL
 
