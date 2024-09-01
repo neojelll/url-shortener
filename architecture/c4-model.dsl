@@ -26,12 +26,11 @@ workspace {
             SecondExternalSystem -> Api "sending request"
             Api -> EventBus "sending data"
             EventBus -> AnalyticsService "sending data"
-            EventBus -> AnalyticsDB "retrieving or writing data"
             EventBus -> BackEnd "sending data"
             AnalyticsService -> AnalyticsDB "select data"
             BackEnd -> DataBase "retrieving or writing data"
             BackEnd -> Cache "checking the cache for the necessary data"
-            ExpirationManager -> DataBase "sending data"
+            ExpirationManager -> DataBase "select data"
         }
         User -> FirstExternalSystem "uses"
         User -> SecondExternalSystem "uses"
