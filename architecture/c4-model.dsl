@@ -1,25 +1,26 @@
 workspace {
 
     model {
-        user = person "User" 
-        S1 = softwareSystem "cUrl" {
+        user = person "User" "Url Shortener user"
+        S1 = softwareSystem "cUrl" "external system" {
             tags S1
         }
-        S2 = softwareSystem "Tg Bot" {
+        S2 = softwareSystem "Tg Bot" "external system" {
             tags S1
         }
-        S = softwareSystem "Url Shortener" {
-            api = container "API" 
-            EventBus = container "EventBus"
-            AnalyticsServer = container "AnalyticsServer"
-            AnalyticsDB = container "AnalyticsDB" {
+        S = softwareSystem "Url Shortener" "Shorten URLs\nRedirect URLs" {
+            api = container "API" "Handles and routes HTTP requests"
+            EventBus = container "EventBus" "Handles event routing and delivery\nProcesses URL generation requests"
+            AnalyticsServer = container "AnalyticsServer" "Track usage\nGenerate reports"
+            AnalyticsDB = container "AnalyticsDatabase" "Stores usage data" {
                 tags "AnalyticsDataBase"
             }
             BackEnd = container "BackEnd"
-            cache = container "cache"
-            DataBase = container "DataBase" {
+            cache = container "Cache" "Stored frequently requested URLs"
+            DataBase = container " Url DataBase" "Stores original and shortened URLs\nStores expiration" {
                 tags "DataBase"
             }
+            ExpirationManager = container "Expiration Manager" "Checks for expired URLs in URL Database\nRemoves them"
             
             S1 -> api "sending request"
             S2 -> api "sending request"
@@ -27,6 +28,7 @@ workspace {
             EventBus -> AnalyticsServer "sending data"
             EventBus -> AnalyticsDB "retrieving or writing data"
             EventBus -> BackEnd "sending data"
+            EventBus -> ExpirationManager "sending data"
             BackEnd -> DataBase "retrieving or writing data"
             BackEnd -> cache "checking the cache for the necessary data"
         }
@@ -55,17 +57,17 @@ workspace {
                 color white
             }
             element "Software System" {
-                background #9c9c06
+                background #8000ff
             }
             element "S1" {
-                background #aa98a9
+                background #b094d6
             }
             element "Person" {
-                background #6b5802
+                background #52327a
                 shape person
             }
             element "Container" {
-                background #b8b804
+                background #8000ff
             }
             element "DataBase" {
                 shape cylinder
