@@ -1,26 +1,26 @@
 workspace {
 
     model {
-        user = person "User" "Url Shortener user"
-        S1 = softwareSystem "cUrl" "external system" {
+        user = person "User" "URL Shortener user"
+        S1 = softwareSystem "cURL" "external system" {
             tags S1
         }
         S2 = softwareSystem "Tg Bot" "external system" {
             tags S1
         }
-        S = softwareSystem "Url Shortener" "Shorten URLs\nRedirect URLs" {
-            api = container "API" "Handles and routes HTTP requests" "FastAPI"
+        S = softwareSystem "URL Shortener" "Shorten URLs\nRedirect URLs" {
+            api = container "API Gateway" "Handles and routes HTTP requests" "FastAPI"
             EventBus = container "EventBus" "Handles event routing and delivery\nProcesses URL generation requests" "Kafka"
-            AnalyticsServer = container "AnalyticsServer" "Track usage\nGenerate reports"
+            AnalyticsServer = container "AnalyticsServer" "Track usage\nGenerate reports" "Python"
             AnalyticsDB = container "AnalyticsDatabase" "Stores usage data" "Prometheus" {
                 tags "AnalyticsDataBase"
             }
-            BackEnd = container "BackEnd"
-            cache = container "Cache" "Stored frequently requested URLs" "Redis"
-            DataBase = container " Url DataBase" "Stores original and shortened URLs\nStores expiration" "PostrgeSQL" {
+            BackEnd = container "URL Shortener Service" "Python"
+            cache = container "URL Cache" "Stored frequently requested URLs" "Redis"
+            DataBase = container "URL DataBase" "Stores original and shortened URLs\nStores expiration" "PostrgeSQL" {
                 tags "DataBase"
             }
-            ExpirationManager = container "Expiration Manager" "Checks for expired URLs in URL Database\nRemoves them"
+            ExpirationManager = container "Expiration Manager" "Checks for expired URLs in URL Database\nRemoves them" "Python"
             
             S1 -> api "sending request"
             S2 -> api "sending request"
