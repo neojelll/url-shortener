@@ -25,10 +25,10 @@
 
 ![Container](architecture/diagrams/structurizr-Container-001.png)
 
-### cURL
+## cURL
 
 Все то же что описано в General, с помощью утилиты cURL
 
-### Telegram
+## Telegram
 
 Все то же что описано в General, с помощью бота в Telegram
