@@ -11,7 +11,7 @@ workspace {
         SoftwareSystem = softwareSystem "URL Shortener" "Shorten URLs\nRedirect URLs" {
             Api = container "API Gateway" "Handles and routes HTTP requests" "FastAPI"
             EventBus = container "EventBus" "Handles event routing and delivery\nProcesses URL generation requests" "Kafka"
-            AnalyticsServer = container "AnalyticsServer" "Track usage\nGenerate reports" "Python"
+            AnalyticsService = container "AnalyticsService" "Track usage\nGenerate reports" "Python"
             AnalyticsDB = container "AnalyticsDatabase" "Stores usage data" "Prometheus" {
                 tags "DatabaseForm"
             }
@@ -25,12 +25,12 @@ workspace {
             FirstExternalSystem -> Api "sending request"
             SecondExternalSystem -> Api "sending request"
             Api -> EventBus "sending data"
-            EventBus -> AnalyticsServer "sending data"
-            EventBus -> AnalyticsDB "retrieving or writing data"
+            EventBus -> AnalyticsService "sending data"
             EventBus -> BackEnd "sending data"
-            EventBus -> ExpirationManager "sending data"
+            AnalyticsService -> AnalyticsDB "select data"
             BackEnd -> DataBase "retrieving or writing data"
             BackEnd -> Cache "checking the cache for the necessary data"
+            ExpirationManager -> DataBase "select data"
         }
         User -> FirstExternalSystem "uses"
         User -> SecondExternalSystem "uses"
@@ -75,7 +75,7 @@ workspace {
                 background #8000ff
             }
 
-            element "DataBaseForm" {
+            element "DatabaseForm" {
                 shape cylinder
             }
 
