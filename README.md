@@ -27,7 +27,7 @@
 
 ### System 
 
-![System](architecture/diagrams/structurizr-Dynamic-001.png)
+![System](architecture/diagrams/structurizr-SystemContext-001.png)
 
 ### Container
 

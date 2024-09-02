@@ -8,7 +8,9 @@ workspace {
 
             Api = container "API Gateway" "Handles and routes HTTP requests" "FastAPI"
 
-            EventBus = container "EventBus" "Handles event routing and delivery\nProcesses URL generation requests" "Kafka"
+            EventBus = container "EventBus" "Handles event routing and delivery\nProcesses URL generation requests" "Kafka" {
+                tags "EventBusForm"
+            }
 
             AnalyticsService = container "AnalyticsService" "Track usage\nGenerate reports" "Python"
 
@@ -60,7 +62,7 @@ workspace {
             autolayout tb
         }
         
-        
+
         styles {
 
             element "Element" {
@@ -68,33 +70,40 @@ workspace {
             }
 
             element "Person" {
-                background #52327a
+                background #0d1701
                 shape Person
                 stroke white
                 metadata False
+                strokeWidth 4
             }
 
             element "Software System" {
                 shape RoundedBox
-                background #8000ff
+                background #244003
                 stroke white
                 metadata False
+                strokeWidth 4
             }
 
             element "ExternalSystem" {
                 shape Box
-                background #b094d6
+                background #2e3329
+                shape WebBrowser
             }
 
             element "Container" {
                 shape RoundedBox
-                background #8000ff
+                background #244003
                 stroke white
+                strokeWidth 4
             }
 
             element "DatabaseForm" {
                 shape cylinder
-                icon "icons/Database.png"
+            }
+            
+            element "EventBusForm" {
+                shape pipe
             }
 
         }
