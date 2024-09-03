@@ -15,9 +15,9 @@
 * При использовании короткой ссылки будет перенаправлен по оригинальной
 * Если время ссылки истекло, пользователь получит в ответ статическую страницу с информацией о том что ссылка не существовала либо уже не валидна
 
-### cURL
+### WebUI
 
-Все то же что описано в General, с помощью утилиты cURL
+Все то же что описано в General, с помощью SPA (Single Page Application) WebUI
 
 ### Telegram
 
@@ -27,7 +27,7 @@
 
 ### System 
 
-![System](architecture/diagrams/structurizr-Dynamic-001.png)
+![System](architecture/diagrams/structurizr-SystemContext-001.png)
 
 ### Container
 
