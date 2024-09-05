@@ -1,40 +1,54 @@
 from typing import Dict, List
 from fastapi import FastAPI
 from urllib.parse import urlparse
+from jsonschema import validate
+from json import load
 import uvicorn
 import asyncio
 import uuid
 
-#создание приложения
+
 app = FastAPI(
 	title="URL Shortener API"
 )
 
-'''url_dict format
-url_dict = {
-    url: ...
-    prefix: ...  | default = ""
-    expiration: ... | default = 24 hours
-    Task: Task-num
-}'''
-url_dict = {}
 
-#проверка ссылки на коректность
+schema = {
+    "type": "object",
+    "properties": {
+        "url": {"type": "string"},
+        "prefix": {"type": "number"},
+		"expiration": {"type": "number"}
+    },
+    "required": ["url"],
+}
+
+
+def is_valid_json(dct):
+    try:
+        validate(instance=dct, schema=schema)
+        return True
+    except:
+        return False
+
+
 def is_valid_url(url: str) -> bool:
     parsed_url = urlparse(url)
-    return all([parsed_url.scheme, parsed_url.netloc])
+    return bool(parsed_url.netloc)
 
-#запрос из cURL or TelegramBot
+
 @app.post("/v1/url/shorten")
-async def post_url(url_dict: Dict[str, str]):
-    url: str = url_dict.setdefault("url", "")
-    if is_valid_url(url):
-        task_num = uuid.uuid5(uuid.NAMESPACE_DNS, urlparse(url).netloc)
-        url_dict.update({"Task": str(task_num)})
-        return {"Task": str(task_num)}
-    return {"ERROR": "not valid url"}
+async def post_url(url_json):
+    url_dict = load(url_json)
+    if is_valid_json(url_dict):
+        url: str = url_dict.get("url")
+        if is_valid_url(url):
+            task_num = uuid.uuid5(uuid.NAMESPACE_DNS, urlparse(url).netloc)
+            return {"Task": str(task_num)}
+        return {"ERROR": "not valid url"}
+    return {"ERROR": "dont write url"}
 
-#запрос из кафки
+
 app.get("v1/url/shorten")
 async def get_request():
     pass
