@@ -27,5 +27,6 @@ def test_get_request():
 
 
 def test_transport_to_long_url():
-	response = client.get("/prefix-shorturl", headers={"url": "https://github.com/neojelll"})
+	response = client.get("/prefix-shorturl", headers={"link": "https://fastapi.tiangolo.com/tutorial/testing/#extended-testing-file"})
+	print(response.json())
 	assert response.status_code == 302

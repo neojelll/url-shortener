@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException, Header
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlparse
 from jsonschema import validate
+from pydantic import BaseModel
 from json import load
 import uvicorn
 import asyncio
@@ -13,6 +14,9 @@ app = FastAPI(
 	title="URL Shortener API"
 )
 
+
+class Url(BaseModel):
+    url: str
 
 schema = {
     "type": "object",
@@ -53,8 +57,9 @@ async def get_request():
 
 
 @app.get("/prefix-shorturl")
-def transport_to_long_url(url: Annotated[str, Header()] = "https://github.com/neojelll"):
-    return RedirectResponse(url=url, status_code=302)
+def transport_to_long_url(link: Annotated[str, Header()] = "https://fastapi.tiangolo.com/tutorial/testing/#extended-testing-file"):
+    print(type(link))
+    return RedirectResponse(url=link, status_code=302)
 
 
 uvicorn.run(app, host="127.0.0.1", port=8000)
