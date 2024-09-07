@@ -1,13 +1,8 @@
 from fastapi.testclient import TestClient
-from api.main import app, is_valid_json, is_valid_url
+from api.main import app, is_valid_url
 
 
 client = TestClient(app)
-
-
-def test_is_valid_json():
-	assert is_valid_json({"name": "surname"}) == False
-	assert is_valid_json({"url": "auiaia"}) == True
 
 
 def test_is_valid_url():
@@ -17,8 +12,21 @@ def test_is_valid_url():
 
 
 def test_post_request():
-	response = client.post("/v1/url/shorten", headers={"url": "http://domain.ru/los/hex"})
+	response = client.post("/v1/url/shorten", json={"url": "http://domain.ru/los/hex"})
 	assert response.status_code == 200
+	assert "Task" in response.json()
+
+
+def test_post_request_error():
+	response = client.post(
+		"/v1/url/shorten", 
+		json={
+		"prefix": "inbeer", 
+		"expiration": 48
+		}
+		)
+	assert response.status_code == 422
+	assert "detail" in response.json()
 
 
 def test_get_request():
@@ -27,6 +35,5 @@ def test_get_request():
 
 
 def test_transport_to_long_url():
-	response = client.get("/prefix-shorturl", headers={"link": "https://fastapi.tiangolo.com/tutorial/testing/#extended-testing-file"})
-	print(response.json())
+	response = client.get("/prefix_osjkcso")
 	assert response.status_code == 302

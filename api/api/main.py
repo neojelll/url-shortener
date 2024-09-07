@@ -1,13 +1,14 @@
 from typing import Annotated, Dict, List
-from fastapi import FastAPI, HTTPException, Header
+from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlparse
-from jsonschema import validate
 from pydantic import BaseModel
-from json import load
 import uvicorn
 import asyncio
 import uuid
+
+
+fake_DB = {"prefix_osjkcso": "https://fastapi.tiangolo.com/tutorial/testing/#extended-testing-file"}
 
 
 app = FastAPI(
@@ -15,26 +16,10 @@ app = FastAPI(
 )
 
 
-class Url(BaseModel):
+class ShortURLRequest(BaseModel):
     url: str
-
-schema = {
-    "type": "object",
-    "properties": {
-        "url": {"type": "string"},
-        "prefix": {"type": "number"},
-		"expiration": {"type": "number"}
-    },
-    "required": ["url"],
-}
-
-
-def is_valid_json(dct):
-    try:
-        validate(instance=dct, schema=schema)
-        return True
-    except:
-        return False
+    prefix: str = ""
+    expiration: int = 24
 
 
 def is_valid_url(url: str) -> bool:
@@ -44,11 +29,15 @@ def is_valid_url(url: str) -> bool:
 
 
 @app.post("/v1/url/shorten")
-async def post_url(url: Annotated[str, Header()]):
+async def post_url(request: ShortURLRequest):
+    url = request.url
     if is_valid_url(url):
         task_num = uuid.uuid5(uuid.NAMESPACE_DNS, urlparse(url).netloc)
+        #write to event bus
+        await asyncio.sleep(1)
         return {"Task": str(task_num)}
-    raise HTTPException(status_code=400, detail="don`t correct url")
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="don`t correct url")
 
 
 @app.get("/v1/url/shorten")
@@ -56,10 +45,10 @@ async def get_request():
     pass
 
 
-@app.get("/prefix-shorturl")
-def transport_to_long_url(link: Annotated[str, Header()] = "https://fastapi.tiangolo.com/tutorial/testing/#extended-testing-file"):
-    print(type(link))
-    return RedirectResponse(url=link, status_code=302)
+@app.get("/{short_id}")
+async def transport_to_long_url(short_id: str):
+    long_url = fake_DB[short_id]
+    return RedirectResponse(url=long_url, status_code=status.HTTP_302_FOUND)
 
 
 uvicorn.run(app, host="127.0.0.1", port=8000)
