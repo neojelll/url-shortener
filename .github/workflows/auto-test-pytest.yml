@@ -21,4 +21,4 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest pytest-cov
-        pytest api/tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        pytest api/tests --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
