@@ -33,7 +33,7 @@ async def post_url(request: ShortURLRequest):
         await asyncio.sleep(1)
         return {"task": str(task_num)}
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                        detail="don`t correct url")
+                        detail="Invalid URL")
 
 
 @app.get("/v1/url/shorten")
