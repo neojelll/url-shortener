@@ -22,6 +22,7 @@ jobs:
         cd api
         pip install poetry
         poetry install
+        cd api
         pip list
     - name: Lint with Ruff
       run: |
