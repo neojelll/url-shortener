@@ -22,7 +22,7 @@ jobs:
         cd api
         pip install poetry
         poetry install
-        poetry env use Python3.12.5
+        poetry env use python3.12.5
     - name: Lint with Ruff
       run: |
         ruff check api/main.py
