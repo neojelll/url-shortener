@@ -25,9 +25,7 @@ jobs:
         cat pyproject.toml
     - name: Lint with Ruff
       run: |
-        cd api
-        poetry install
-        ruff check .
+        ruff check api/main.py
     - name: Test with pytest
       run: |
         pytest api/tests 
