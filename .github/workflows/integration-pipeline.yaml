@@ -1,6 +1,6 @@
 name: Python package
 
-on: 
+on:
   push:
     branches:
       - feature/api
@@ -17,23 +17,17 @@ jobs:
       with:
         python-version: '3.12.5'
 
-    - name: Install Poetry
+    - name: Install Poetry and project dependencies
       run: |
-        cd api
         python -m pip install --upgrade pip
         python -m pip install poetry
-
-    - name: Install dependencies
-      run: |
         cd api
         poetry install
 
     - name: Lint with Ruff
       run: |
-        cd api
-        ruff check api/main.py
+        ruff check api
 
     - name: Test with pytest
       run: |
-        cd api
-        pytest tests
+        pytest ../tests
