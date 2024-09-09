@@ -24,8 +24,8 @@ jobs:
         poetry install
     - name: Lint with Ruff
       run: |
+        pip list
         ruff check api
     - name: Test with pytest
       run: |
         pytest api/tests 
-
