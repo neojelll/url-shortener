@@ -20,6 +20,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         cd api
+        pip install pyenv
         pyenv install 3.12.5
         pip install poetry
         poetry install
