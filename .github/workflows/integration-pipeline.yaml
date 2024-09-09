@@ -22,10 +22,10 @@ jobs:
         pip install poetry
         cd api
         poetry install
+        python -m poetry shell
     - name: Lint with Ruff
       run: |
         cd api
-        poetry shell
         ruff check api/main.py
     - name: Test with pytest
       run: |
