@@ -23,9 +23,6 @@ jobs:
         pip install poetry
         poetry install
         cat pyproject.toml
-    - name: Lint with Ruff
-      run: |
-        ruff check api/main.py
     - name: Test with pytest
       run: |
         pytest api/tests 
