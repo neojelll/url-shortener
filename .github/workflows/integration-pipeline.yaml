@@ -26,8 +26,8 @@ jobs:
 
     - name: Lint with Ruff
       run: |
-        ruff check api
+        poetry run ruff check api
 
     - name: Test with pytest
       run: |
-        pytest ../tests
+        poetry run pytest ../tests
