@@ -21,8 +21,8 @@ jobs:
         python -m pip install --upgrade pip
         cd api
         pip install poetry
+        poetry init
         poetry install
-        cd api
         pip list
     - name: Lint with Ruff
       run: |
