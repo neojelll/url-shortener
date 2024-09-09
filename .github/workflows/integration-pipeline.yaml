@@ -22,14 +22,10 @@ jobs:
         cd api
         pip install poetry
         poetry install
-        cat pyproject.toml
+        poetry env use Python 3.12.5
     - name: Lint with Ruff
       run: |
-        cd api
-        poetry install
         ruff check api/main.py
     - name: Test with pytest
       run: |
-        cd api
-        poetry install
         pytest tests 
