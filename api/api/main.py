@@ -2,9 +2,20 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlparse
 from pydantic import BaseModel
+from api.message_broker import MessageBroker
 import uvicorn
 import asyncio
 import uuid
+
+
+class MyService:
+    def __init__(self, broker: MessageBroker):
+        self.broker = broker
+
+    def process_data(self, data):
+        # Обработка данных и отправка сообщения
+        message = f"Processed: {data}"
+        self.broker.send_message("data_queue", message)
 
 
 app = FastAPI(
@@ -29,7 +40,7 @@ async def post_url(request: ShortURLRequest):
     url = request.url
     if is_valid_url(url):
         task_num = uuid.uuid5(uuid.NAMESPACE_DNS, urlparse(url).netloc)
-        #write to event bus
+        #отправка данных в кафку
         await asyncio.sleep(1)
         return {"task": str(task_num)}
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,

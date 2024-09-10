@@ -1,6 +1,8 @@
 from fastapi.testclient import TestClient
 from fastapi import status
-from api.main import app, is_valid_url
+from api.main import app, is_valid_url, MyService
+from api.message_broker import MessageBroker
+import pytest
 
 
 client = TestClient(app)
@@ -12,10 +14,19 @@ def test_is_valid_url():
 	assert not is_valid_url("")
 
 
-def test_post_request():
-	response = client.post("/v1/url/shorten", json={"url": "http://domain.ru/los/hex"})
+def test_post_request(mocker):
+	dct = {
+		"url": "http://domain.ru/los/hex"
+	}
+
+	response = client.post("/v1/url/shorten", json=dct)
 	assert response.status_code == status.HTTP_200_OK
 	assert "task" in response.json()
+
+	mock_broker = mocker.Mock(spec=MessageBroker)
+	service = MyService(broker=mock_broker)
+	service.process_data(dct)
+	mock_broker.send_message.assert_called_once_with("data_queue", f"Processed: {dct}")
 
 
 def test_post_request_error():
@@ -36,5 +47,5 @@ def test_get_request():
 
 
 def test_transport_to_long_url():
-	response = client.get("/fastapi.tiangolo.com", follow_redirects=False)
+	response = client.get("/github.com}", follow_redirects=False)
 	assert response.status_code == status.HTTP_302_FOUND
