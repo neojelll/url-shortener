@@ -1,4 +1,4 @@
 class MessageBroker:
-	def send_message(self, queue_name, message):
-		#Логика отправки сообщения
+	def send_data(self, queue_name, message):
+		#Logic send message
 		pass

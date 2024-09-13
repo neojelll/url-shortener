@@ -1,4 +1,4 @@
-from api import app, logger
+from api import app, logger # type: ignore
 
 if __name__ == "__main__":
     logger.info("Starting the server...")
