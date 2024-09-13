@@ -1,8 +1,9 @@
 from fastapi.testclient import TestClient
 from fastapi import status
-from api.main import app, is_valid_url, MyService
+
+from api.api import app, is_valid_url
+from api.adapter_to_message_broker import AdapterToMessageBroker
 from api.message_broker import MessageBroker
-import pytest
 
 
 client = TestClient(app)
@@ -24,7 +25,7 @@ def test_post_request(mocker):
 	assert "task" in response.json()
 
 	mock_broker = mocker.Mock(spec=MessageBroker)
-	service = MyService(broker=mock_broker)
+	service = AdapterToMessageBroker(broker=mock_broker)
 	service.process_data(dct)
 	mock_broker.send_message.assert_called_once_with("data_queue", f"Processed: {dct}")
 
