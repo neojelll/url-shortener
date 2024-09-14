@@ -1,8 +1,11 @@
 import logging
 
-from fastapi import FastAPI, HTTPException, status, Request
+from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 import asyncio
+
+from kafka import KafkaProducer
+import json
 
 from urllib.parse import urlparse
 from pydantic import BaseModel
@@ -76,9 +79,16 @@ async def post_url(request: ShortURLRequest):
     if is_valid_url(url):
         task_num = uuid.uuid5(uuid.NAMESPACE_DNS, urlparse(url).netloc)
         returned_value = {"task": str(task_num)}
-        #send data to kafka
+
+        producer = KafkaProducer(
+            bootstrap_service="localhost:9092",
+            value_serializer=lambda x: json.dumps(x).encode("utf-8")
+            )
         logger.debug(f"Send data to message-broker...\nparams: {request}")
-        await asyncio.sleep(1)
+        await producer.send("topic_name", request)
+        producer.flush()
+        producer.close()
+
         logger.debug(f"Post request completed.\nreturned: {returned_value}")
         return returned_value
     logger.error("Post request error.\nERROR INFO: Invalid URL")
