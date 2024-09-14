@@ -3,7 +3,6 @@ from fastapi import status
 
 from api.api import app, is_valid_url
 from api.message_broker import MessageBroker
-from api.fakedb import FakeDataBase
 
 
 client = TestClient(app)
@@ -46,12 +45,6 @@ def test_get_request():
 	assert response.status_code == status.HTTP_200_OK
 
 
-def test_transport_to_long_url(mocker):
-	data = {"short_url": "http://prefix.com/test"}
-
-	response = client.get("/prefix.com/test}", follow_redirects=False)
+def test_transport_to_long_url():
+	response = client.get("/prefix.com}", follow_redirects=False)
 	assert response.status_code == status.HTTP_302_FOUND
-
-	mock_database = mocker.Mock(spec=FakeDataBase)
-	mock_database.select_data(data)
-	mock_database.select_data.assert_called_once_with(data)

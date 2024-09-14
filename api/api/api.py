@@ -53,14 +53,10 @@ logger.addHandler(ch)
 
 def is_valid_url(url: str) -> bool:
     logger.debug(f"Start is valid URL function...\nparams: {url}")
-    try:
-        parsed_url = urlparse(url)
-        returned = bool(parsed_url.netloc)
-        logger.debug(f"Is valid URL function completed.\nreturned: {returned}")
-        return returned
-    except Exception as error:
-        logger.error(f"Is valid URL function error\nERROR INFO: {error}")
-        raise error
+    parsed_url = urlparse(url)
+    returned = bool(parsed_url.netloc)
+    logger.debug(f"Is valid URL function completed.\nreturned: {returned}")
+    return returned
 
 
 class ShortURLRequest(BaseModel):
@@ -76,24 +72,24 @@ app = FastAPI(title="URL Shortener API")
 async def post_url(request: ShortURLRequest):
     logger.debug(f"Start post request...\nparams: {request}")
     url = request.url
-    if is_valid_url(url):
-        task_num = uuid.uuid5(uuid.NAMESPACE_DNS, urlparse(url).netloc)
-        returned_value = {"task": str(task_num)}
+    if not is_valid_url(url):
+        logger.error("Post request error.\nERROR INFO: Invalid URL")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid URL")
+    task_num = uuid.uuid5(uuid.NAMESPACE_DNS, urlparse(url).netloc)
+    returned_value = {"task": str(task_num)}
 
-        producer = KafkaProducer(
-            bootstrap_service="localhost:9092",
-            value_serializer=lambda x: json.dumps(x).encode("utf-8")
-            )
-        logger.debug(f"Send data to message-broker...\nparams: {request}")
-        await producer.send("topic_name", request)
-        producer.flush()
-        producer.close()
+    producer = KafkaProducer(
+        bootstrap_service="localhost:9092",
+        value_serializer=lambda x: json.dumps(x).encode("utf-8")
+        )
+    logger.debug(f"Send data to message-broker...\nparams: {request}")
+    await producer.send("topic_name", request)
+    producer.flush()
+    producer.close()
 
-        logger.debug(f"Post request completed.\nreturned: {returned_value}")
-        return returned_value
-    logger.error("Post request error.\nERROR INFO: Invalid URL")
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                        detail="Invalid URL")
+    logger.debug(f"Post request completed.\nreturned: {returned_value}")
+    return returned_value
 
 
 @app.get("/v1/url/shorten")

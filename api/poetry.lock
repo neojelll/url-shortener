@@ -217,18 +217,22 @@ files = [
 ]
 
 [[package]]
-name = "kafka-python"
-version = "2.0.2"
+name = "kafka-python-ng"
+version = "2.2.2"
 description = "Pure Python client for Apache Kafka"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 files = [
-    {file = "kafka-python-2.0.2.tar.gz", hash = "sha256:04dfe7fea2b63726cd6f3e79a2d86e709d608d74406638c5da33a01d45a9d7e3"},
-    {file = "kafka_python-2.0.2-py2.py3-none-any.whl", hash = "sha256:2d92418c7cb1c298fa6c7f0fb3519b520d0d7526ac6cb7ae2a4fc65a51a94b6e"},
+    {file = "kafka-python-ng-2.2.2.tar.gz", hash = "sha256:87ad3a766e2c0bec71d9b99bdd9e9c5cda62d96cfda61a8ca16510484d6ad7d4"},
+    {file = "kafka_python_ng-2.2.2-py2.py3-none-any.whl", hash = "sha256:3fab1a03133fade1b6fd5367ff726d980e59031c4aaca9bf02c516840a4f8406"},
 ]
 
 [package.extras]
+boto = ["botocore"]
 crc32c = ["crc32c"]
+lz4 = ["lz4"]
+snappy = ["python-snappy"]
+zstd = ["zstandard"]
 
 [[package]]
 name = "opentelemetry-api"
@@ -737,4 +741,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "39e2a14abc675400ec4c48bdb365d10096879ac9a985a68f3dbf4270dad8285a"
+content-hash = "49def5314f9191c2986632f5df9cbf69555019e6fee24042a7515a998d602897"
