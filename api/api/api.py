@@ -93,7 +93,7 @@ async def post_url(request: ShortURLRequest):
     returned_value = {"task": str(task_num)}
 
     producer = KafkaProducer(
-        bootstrap_service="localhost:9092",
+        bootstrap_servers="localhost:9092",
         value_serializer=lambda x: json.dumps(x).encode("utf-8")
         )
     logger.debug(f"Send data to message-broker... params: {repr(request)}")
