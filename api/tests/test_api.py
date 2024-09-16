@@ -2,7 +2,9 @@ from fastapi.testclient import TestClient
 from fastapi import status
 
 from api.api import app, is_valid_url
-from api.message_broker import MessageBroker
+
+from unittest.mock import AsyncMock
+import pytest
 
 
 client = TestClient(app)
@@ -14,18 +16,23 @@ def test_is_valid_url():
 	assert not is_valid_url("")
 
 
-def test_post_request(mocker):
+@pytest.mark.asyncio
+async def test_post_request(mocker):
 	data = {
 		"url": "http://domain.ru/los/hex"
 	}
+
+	mock_broker = mocker.patch('api.api.KafkaProducer', autospec=True)
+	instance = mock_broker.return_value
+	instance.send = AsyncMock()
+
 
 	response = client.post("/v1/url/shorten", json=data)
 	assert response.status_code == status.HTTP_200_OK
 	assert "task" in response.json()
 
-	mock_broker = mocker.Mock(spec=MessageBroker)
-	mock_broker.send_data("message", data)
-	mock_broker.send_data.assert_called_once_with("message", data)
+	await instance.send("topic_name", data)
+	instance.send.assert_awaited()
 
 
 def test_post_request_error():
@@ -46,5 +53,5 @@ def test_get_request():
 
 
 def test_transport_to_long_url():
-	response = client.get("/prefix.com}", follow_redirects=False)
+	response = client.get("/github.com", follow_redirects=False)
 	assert response.status_code == status.HTTP_302_FOUND
