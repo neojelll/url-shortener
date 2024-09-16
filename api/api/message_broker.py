@@ -1,5 +1,4 @@
 from kafka import KafkaProducer
-from api.api import ShortURLRequest 
 from loguru import logger
 import json
 
@@ -14,7 +13,7 @@ class MessageBroker(object):
 	def __enter__(self):
 		return self
 
-	def send_data(self, topic: str, data: ShortURLRequest):
+	def send_data(self, topic: str, data):
 		logger.debug(f"Send data to message-broker... params: {repr(data)}")
 		self.producer.send(topic, data)
 

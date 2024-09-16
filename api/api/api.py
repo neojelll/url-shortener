@@ -4,9 +4,9 @@ import sys
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 
-from api.message_broker import MessageBroker
-from api.db import DataBase
-from api.cache import Cache
+from .message_broker import MessageBroker #type: ignore
+from .db import DataBase #type: ignore
+from .cache import Cache #type: ignore
 
 from urllib.parse import urlparse
 from pydantic import BaseModel
@@ -73,12 +73,11 @@ async def transport_to_long_url(short_url: str):
         else:
             with DataBase() as database:
                 long_url = database.get_long_url(short_url)
-        
-    	cache.set(short_url, long_url) #type: ignore
-    
-    if long_url is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail="URL is not valid")
+
+                if long_url is None:
+                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                        detail="URL is not valid")
+        cache.set(short_url, long_url)
 
     logger.debug(f"Redirect response completed. returned: Redirect to {repr("long_url")}")
-    return RedirectResponse(url="http://github.com", status_code=status.HTTP_302_FOUND) #type: ignore
+    return RedirectResponse(url=long_url, status_code=status.HTTP_302_FOUND) #type: ignore
