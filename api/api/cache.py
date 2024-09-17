@@ -10,10 +10,13 @@ class Cache(object):
     		decode_responses=True# Автоматически декодировать байтовые строки в строки
     		)
 		
-	def check(self, short_url):
-		return self.cache.exists(short_url)
+	async def check(self, short_url):
+		if self.cache.exists(short_url):
+			return self.cache.get(short_url)
+		else:
+			return None
 	
-	def set(self, short_url, long_url):
+	async def set(self, short_url, long_url):
 		self.cache.set(short_url, long_url)
 
 	def __enter__(self):

@@ -51,7 +51,7 @@ class DataBase(object):
     def __enter__(self):
         return self
 
-    def get_long_url(self, short_value):
+    async def get_long_url(self, short_value):
         result = (
             self.session
             .query(LongUrl)
