@@ -4,9 +4,9 @@ import sys
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 
-from .message_broker import MessageBroker 
-from .db import DataBase 
-from .cache import Cache 
+from .message_broker import MessageBroker #type: ignore
+from .db import DataBase #type: ignore
+from .cache import Cache #type: ignore
 
 from urllib.parse import urlparse
 from pydantic import BaseModel
@@ -58,39 +58,26 @@ async def post_url(data: ShortURLRequest):
 
 
 @app.get("/v1/url/shorten")
-async def get_request(short_url):
-    with Cache() as cache:
-        check = await cache.check(short_url)
-        
-        if not check is None:
-            long_url = check
-        else:
-            with DataBase() as database:
-                long_url = await database.get_long_url(short_url)
-
-            if long_url is None:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail="URL is not found")
-    return {"long_url": f"{long_url}"}
+async def get_request():
+    pass
 
 
 @app.get("/{short_url}")
-async def redirect_request(short_url: str):
+async def transport_to_long_url(short_url: str):
     logger.debug(f"Start redirect response... params: {repr(short_url)}")
 	
     with Cache() as cache:
-        check = await cache.check(short_url)
-
-        if not check is None:
+        check = cache.check(short_url)
+        if isinstance(check, str):
             long_url = check
         else:
             with DataBase() as database:
-                long_url = await database.get_long_url(short_url)
+                long_url = database.get_long_url(short_url)
 
                 if long_url is None:
                     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                         detail="URL is not valid")
-        await cache.set(short_url, long_url)
+        cache.set(short_url, long_url)
 
-    logger.debug(f"Redirect response completed. returned: Redirect to {repr(long_url)}")
+    logger.debug(f"Redirect response completed. returned: Redirect to {repr("long_url")}")
     return RedirectResponse(url=long_url, status_code=status.HTTP_302_FOUND) #type: ignore
