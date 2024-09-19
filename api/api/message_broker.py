@@ -10,13 +10,13 @@ class MessageBroker(object):
 			value_serializer=lambda x: json.dumps(x).encode("utf-8")
 		)
 		
-	def __enter__(self):
+	async def __aenter__(self):
 		return self
 
-	def send_data(self, topic: str, data):
+	async def send_data(self, topic: str, data):
 		logger.debug(f"Send data to message-broker... params: {repr(data)}")
-		self.producer.send(topic, data)
+		await self.producer.send(topic, data)
 
-	def __exit__(self, exc_type, exc_value, traceback):
-		self.producer.flush()
-		self.producer.close()
+	async def __aexit__(self, exc_type, exc_value, traceback):
+		await self.producer.flush() #type: ignore
+		await self.producer.close() #type: ignore

@@ -50,8 +50,8 @@ async def post_url(data: ShortURLRequest):
     task_num = uuid.uuid5(uuid.NAMESPACE_DNS, urlparse(url).netloc)
     returned_value = {"task": str(task_num)}
 
-    with MessageBroker() as broker:
-        broker.send_data("my_topic", data)
+    async with MessageBroker() as broker:
+        await broker.send_data("my_topic", data)
 
     logger.debug(f"Post request completed. returned: {repr(returned_value)}")
     return returned_value
@@ -59,13 +59,13 @@ async def post_url(data: ShortURLRequest):
 
 @app.get("/v1/url/shorten")
 async def get_request(short_url):
-    with Cache() as cache:
+    async with Cache() as cache:
         check = await cache.check(short_url)
         
         if not check is None:
             long_url = check
         else:
-            with DataBase() as database:
+            async with DataBase() as database:
                 long_url = await database.get_long_url(short_url)
 
             if long_url is None:
@@ -78,13 +78,13 @@ async def get_request(short_url):
 async def redirect_request(short_url: str):
     logger.debug(f"Start redirect response... params: {repr(short_url)}")
 	
-    with Cache() as cache:
+    async with Cache() as cache:
         check = await cache.check(short_url)
 
         if not check is None:
             long_url = check
         else:
-            with DataBase() as database:
+            async with DataBase() as database:
                 long_url = await database.get_long_url(short_url)
 
                 if long_url is None:
