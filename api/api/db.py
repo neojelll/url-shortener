@@ -1,5 +1,8 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, TIMESTAMP, ForeignKey
-from sqlalchemy.orm import relationship, sessionmaker, declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy import Column, Integer, String, Text, TIMESTAMP, ForeignKey
+from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy import select
+from loguru import logger
 
 
 USERNAME = 'your_username'
@@ -9,11 +12,9 @@ PORT = '5432'
 DATABASE = 'your_database_name'
 
 
-DATABASE_URL = f'postgresql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
-
+DATABASE_URL = f'postgresql+asyncpg://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
 
 Base = declarative_base()
-
 
 class LongUrl(Base):
     __tablename__ = 'long_url'
@@ -39,28 +40,31 @@ class UrlMapping(Base):
 
     short_url = relationship('ShortUrl', backref='url_mappings')
     long_url = relationship('LongUrl', backref='url_mappings')
-    
 
-class DataBase(object):    
+
+class DataBase:
     def __init__(self):
-        engine = create_engine(DATABASE_URL)
-		
-        Session = sessionmaker(bind=engine)
-        self.session = Session()
+        self.engine = create_async_engine(DATABASE_URL, echo=True, future=True)
+        self.async_sessionmaker = async_sessionmaker(bind=self.engine, class_=AsyncSession, expire_on_commit=False)
         
-    def __enter__(self):
+    async def __aenter__(self):
+        self.session = await self.async_sessionmaker() #type: ignore
         return self
 
     async def get_long_url(self, short_value):
-        result = (
-            self.session
-            .query(LongUrl)
+        result = await self.session.execute(
+            select(LongUrl)
             .join(UrlMapping)
             .join(ShortUrl)
-            .filter(ShortUrl.short_value == short_value)
-            .first()
-            )
-        return result.long_value if result else None
-    
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.session.close()
+            .where(ShortUrl.short_value == short_value)
+        )
+
+        logger.warning(f"Result: {result}")
+        long_url = result.scalars().first()
+        if long_url:
+            return long_url.long_value 
+        return None
+
+    async def __aexit__(self, exc_type, exc_value, traceback):
+        await self.session.close()
+      
