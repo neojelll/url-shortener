@@ -53,20 +53,19 @@ class DataBase:
 
     async def get_long_url(self, short_value):
         try:
-            long_url = await self.session.execute(
+            result = await self.session.execute(
                 select(LongUrl)
                 .join(UrlMapping)
                 .join(ShortUrl)
                 .where(ShortUrl.short_value == short_value)
             )
 
-            long_url = await long_url.scalars() #type: ignore
-            long_url = await long_url.first()
+            long_url = result.scalars().first()
 
-            if not long_url is None:
+            if long_url is not None:
                 return long_url.long_value
             return None
-        
+
         except Exception as e:
             logger.error(f"An error occurred while fetching long URL: {e}")
             return None
