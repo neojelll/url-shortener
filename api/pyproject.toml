@@ -29,10 +29,9 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.ruff]
-# Дополнительные настройки
-target-version = "py312"  # Укажите целевую версию Python
+target-version = "py312"
 
 fix = true
 
 [lint]
-ignore = ["E501"]  # Игнорируйте ошибки с указанным кодом (например, длинные строки)
+ignore = ["E501"]
