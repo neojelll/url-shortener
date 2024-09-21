@@ -4,9 +4,9 @@ import sys
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 
-from .message_broker import MessageBroker 
-from .db import DataBase 
-from .cache import Cache 
+from message_broker import MessageBroker #type: ignore
+from db import DataBase #type: ignore
+from cache import Cache #type: ignore
 
 from urllib.parse import urlparse
 from pydantic import BaseModel
@@ -71,6 +71,7 @@ async def get_request(short_url):
             if long_url is None:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail="URL is not found")
+            await cache.set(short_url, long_url)
     return {"long_url": f"{long_url}"}
 
 

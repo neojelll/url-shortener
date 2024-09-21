@@ -13,7 +13,9 @@ async def test_init(mocker):
 
 	mock_redis = mocker.patch("api.cache.Redis", autospec=True, return_value=mock_cache)
 
-	Cache()
+	cache = Cache()
+
+	assert isinstance(cache, Cache)
 
 	mock_redis.assert_called_once_with(host='localhost', port=6379, db=0, decode_responses=True)
 

@@ -52,18 +52,24 @@ class DataBase:
         return self
 
     async def get_long_url(self, short_value):
-        result = await self.session.execute(
-            select(LongUrl)
-            .join(UrlMapping)
-            .join(ShortUrl)
-            .where(ShortUrl.short_value == short_value)
-        )
+        try:
+            long_url = await self.session.execute(
+                select(LongUrl)
+                .join(UrlMapping)
+                .join(ShortUrl)
+                .where(ShortUrl.short_value == short_value)
+            )
 
-        logger.warning(f"Result: {result}")
-        long_url = result.scalars().first()
-        if long_url:
-            return long_url.long_value 
-        return None
+            long_url = await long_url.scalars() #type: ignore
+            long_url = await long_url.first()
+
+            if not long_url is None:
+                return long_url.long_value
+            return None
+        
+        except Exception as e:
+            logger.error(f"An error occurred while fetching long URL: {e}")
+            return None
 
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.session.close()

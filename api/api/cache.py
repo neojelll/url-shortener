@@ -15,7 +15,8 @@ class Cache(object):
 		
 	async def check(self, short_url):
 		if await self.cache.exists(short_url):
-			return await self.cache.get(short_url)
+			result = await self.cache.get(short_url)
+			return result
 		else:
 			return None
 	

@@ -10,10 +10,11 @@ python = "^3.12"
 fastapi = "^0.112.2"
 uvicorn = "^0.30.6"
 kafka-python-ng = "^2.2.2"
-sqlalchemy = "^2.0.34"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.35"}
 redis = "^5.0.8"
 loguru = "^0.7.2"
 pytest-asyncio = "^0.24.0"
+asyncpg = "^0.29.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.4"
