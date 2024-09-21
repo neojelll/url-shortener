@@ -14,11 +14,7 @@ class Cache(object):
 		return self
 		
 	async def check(self, short_url):
-		if await self.cache.exists(short_url):
-			result = await self.cache.get(short_url)
-			return result
-		else:
-			return None
+		return await self.cache.get(short_url)
 	
 	async def set(self, short_url, long_url):
 		await self.cache.set(short_url, long_url)

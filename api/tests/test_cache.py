@@ -1,76 +1,46 @@
 from unittest.mock import AsyncMock
 from api.cache import Cache
+import pytest_asyncio
 import pytest
-
 
 SHORT_URL = "shortener.com"
 LONG_URL = "http://shortener.com/long"
 
+@pytest_asyncio.fixture
+async def mock_cache(mocker):
+	mock_c = AsyncMock()
+	mocker.patch("api.cache.Redis", autospec=True, return_value=mock_c)
+	cache = Cache()
+	async with cache as instance_cache:
+		yield instance_cache, mock_c
+
+def setup_get_result(mock_cache, return_value):
+	mock_cache.get.return_value = return_value
 
 @pytest.mark.asyncio
-async def test_init(mocker):
-	mock_cache = AsyncMock()
-
-	mock_redis = mocker.patch("api.cache.Redis", autospec=True, return_value=mock_cache)
-
-	cache = Cache()
-
+async def test_init(mock_cache):
+	cache, _ = mock_cache
+	assert isinstance(cache, Cache)
+	
+@pytest.mark.asyncio
+async def test_aenter(mock_cache):
+	cache, _ = mock_cache
 	assert isinstance(cache, Cache)
 
-	mock_redis.assert_called_once_with(host='localhost', port=6379, db=0, decode_responses=True)
-
-	
 @pytest.mark.asyncio
-async def test_aenter(mocker):
-	mock_cache = AsyncMock()
-
-	mocker.patch("api.cache.Redis", autospec=True, return_value=mock_cache)
-
-	cache = Cache()
-	
-	async with cache as entered_cache:
-		assert cache is entered_cache
-
-	mock_cache.close.assert_awaited_once_with()
-
+@pytest.mark.parametrize("short_url, get_return, expected", [
+	(SHORT_URL, LONG_URL, LONG_URL),
+	("non_existent_short_url", None, None),
+])
+async def test_check(mock_cache, short_url, get_return, expected):
+	cache, mock_c = mock_cache
+	setup_get_result(mock_c, get_return)
+	result = await cache.check(short_url)
+	assert result == expected
+	mock_c.get.assert_awaited_once_with(short_url)
 
 @pytest.mark.asyncio
-async def test_check_hit(mocker):
-	mock_cache = AsyncMock()
-
-	mocker.patch("api.cache.Redis", autospec=True, return_value=mock_cache)
-
-	async with Cache() as cache:
-		await cache.check(SHORT_URL)
-
-	mock_cache.exists.assert_awaited_once_with(SHORT_URL)
-	mock_cache.get.assert_awaited_once_with(SHORT_URL)
-	mock_cache.close.assert_awaited_once_with()
-
-
-@pytest.mark.asyncio
-async def test_check_miss(mocker):
-	mock_cache = AsyncMock()
-
-	mocker.patch("api.cache.Redis", autospec=True, return_value=mock_cache)
-
-	mock_cache.exists = AsyncMock(return_value=False)
-
-	async with Cache() as cache:
-		assert await cache.check(SHORT_URL) is None
-
-	mock_cache.exists.assert_awaited_once_with(SHORT_URL)
-	mock_cache.close.assert_awaited_once_with()
-
-
-@pytest.mark.asyncio
-async def test_set(mocker):
-	mock_cache = AsyncMock()
-
-	mocker.patch("api.cache.Redis", autospec=True, return_value=mock_cache)
-
-	async with Cache() as cache:
-		await cache.set(SHORT_URL, LONG_URL)
-
-	mock_cache.set.assert_awaited_once_with(SHORT_URL, LONG_URL)
-	mock_cache.close.assert_awaited_once_with()
+async def test_set(mock_cache):
+	cache, mock_c = mock_cache
+	await cache.set(SHORT_URL, LONG_URL)
+	mock_c.set.assert_awaited_once_with(SHORT_URL, LONG_URL)

@@ -1,57 +1,42 @@
 from fastapi.testclient import TestClient
 from fastapi import status
-
 from api.api import app, is_valid_url
-
 from unittest.mock import AsyncMock
+import pytest_asyncio
 import pytest
-
 
 SHORT_URL = "shortener.com"
 LONG_URL = "http://shortener.com/long"
 
+@pytest_asyncio.fixture
+async def mock_broker(mocker):
+	mock_broker = mocker.patch('api.api.MessageBroker', autospec=True)
+	mock_broker_instance = mock_broker.return_value
+	mock_broker_instance.__aenter__.return_value = mock_broker_instance
+	return mock_broker_instance
 
 @pytest.fixture
 def client():
 	return TestClient(app)
-
 
 def test_is_valid_url():
 	assert is_valid_url("http://domain.ru/los")
 	assert not is_valid_url("aldakooaj")
 	assert not is_valid_url("")
 
-
 @pytest.mark.asyncio
-async def test_post_correct_url(mocker, client):
-	data = {
-		"url": "http://domain.ru/los/hex"
-	}
-
-	mock_broker = mocker.patch('api.api.MessageBroker', autospec=True)
-	mock_broker_instance = mock_broker.return_value
-	mock_broker_instance.__aenter__.return_value = mock_broker_instance
-	mock_broker_instance.send_data = AsyncMock()
-
+@pytest.mark.parametrize("data, error, in_json", [
+	({"url": "http://shortener.com/long"}, status.HTTP_200_OK, "task"),
+	({"prefix": "inbeer", "expiration": 48}, status.HTTP_422_UNPROCESSABLE_ENTITY, "detail"),
+	({"url": "no valid url", "prefix": "inbeer", "expiration": 48}, status.HTTP_400_BAD_REQUEST, "detail")
+])
+async def test_post_correct_url(mock_broker, client, data, error, in_json):
+	mock_broker_instance = mock_broker
 	response = client.post("/v1/url/shorten", json=data)
-	assert response.status_code == status.HTTP_200_OK
-	assert "task" in response.json()
-
+	assert response.status_code == error
+	assert in_json in response.json()
 	await mock_broker_instance.send_data("topic_name", data)
 	mock_broker_instance.send_data.assert_awaited_with("topic_name", data)
-
-
-def test_post_no_url(client):
-	response = client.post("/v1/url/shorten", json={"prefix": "inbeer", "expiration": 48})
-	assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
-	assert "detail" in response.json()
-
-
-def test_post_dont_correct_url(client):
-	response = client.post("/v1/url/shorten", json={"url": "no valid url", "prefix": "inbeer", "expiration": 48})
-	assert response.status_code == status.HTTP_400_BAD_REQUEST
-	assert "detail" in response.json()
-
 
 @pytest.mark.asyncio
 async def test_get_request_cache_hit(mocker, client):

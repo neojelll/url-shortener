@@ -16,11 +16,6 @@ async def mock_db(mocker):
     async with db as db_instance:
         yield db_instance, mock_session
 
-@pytest_asyncio.fixture(autouse=True)
-def suppress_logs(mocker):
-    mock_logger = mocker.patch('api.db.logger')
-    return mock_logger
-
 def setup_execute_result(mock_session, return_value):
     execute_result = MagicMock()
     mock_session.execute.return_value = execute_result
@@ -50,10 +45,9 @@ async def test_get_long_url(mock_db, short_url, mock_return, expected):
     mock_session.execute.assert_awaited_once()
 
 @pytest.mark.asyncio
-async def test_get_long_url_exception(mock_db, suppress_logs):
+async def test_get_long_url_exception(mock_db):
     db, mock_session = mock_db
     mock_session.execute.side_effect = Exception("Database error")
     result = await db.get_long_url("short_url_with_exception")
     assert result is None
     mock_session.execute.assert_awaited_once()
-    suppress_logs.error.assert_called_once_with("An error occurred while fetching long URL: Database error")

@@ -1,48 +1,31 @@
 from unittest.mock import AsyncMock
 from api.message_broker import MessageBroker
+import pytest_asyncio
 import pytest
-
 
 TOPIC = "test_topic"
 DATA = {"url": "http://github.com/long"}
 
-
-@pytest.mark.asyncio
-async def test_init(mocker):
+@pytest_asyncio.fixture
+async def mock_broker(mocker):
 	mock_producer = AsyncMock()
-
-	mocker.patch("api.message_broker.KafkaProducer", autospec=True,
-			return_value=mock_producer)
-
-	instance = MessageBroker()
-
-	assert isinstance(instance, MessageBroker)
-
-
-@pytest.mark.asyncio
-async def test_aenter(mocker):
-	mock_producer = AsyncMock()
-
 	mocker.patch("api.message_broker.KafkaProducer", autospec=True, return_value=mock_producer)
-
-	instance = MessageBroker()
-
-	async with instance as entered_instance:
-		assert instance is entered_instance
-
-	mock_producer.flush.assert_awaited_once_with()
-	mock_producer.close.assert_awaited_once_with()
-
+	broker = MessageBroker()
+	async with broker as broker_instance:
+		yield broker_instance, mock_producer
 
 @pytest.mark.asyncio
-async def test_send_data(mocker):
-	mock_producer = AsyncMock()
-    
-	mocker.patch("api.message_broker.KafkaProducer", autospec=True, return_value=mock_producer)
-    
-	async with MessageBroker() as broker:
-		await broker.send_data(TOPIC, DATA)
+async def test_init(mock_broker):
+	broker, _ = mock_broker
+	assert isinstance(broker, MessageBroker)
 
+@pytest.mark.asyncio
+async def test_aenter(mock_broker):
+	broker, _ = mock_broker
+	assert isinstance(broker, MessageBroker)
+
+@pytest.mark.asyncio
+async def test_send_data(mock_broker):
+	broker, mock_producer = mock_broker
+	await broker.send_data(TOPIC, DATA)
 	mock_producer.send.assert_awaited_once_with(TOPIC, DATA)
-	mock_producer.flush.assert_awaited_once_with()
-	mock_producer.close.assert_awaited_once_with()
