@@ -4,7 +4,6 @@
 #other
 .DS_Store
 .coverage
-.coveragerc
 
 #python
 __pycache__/
