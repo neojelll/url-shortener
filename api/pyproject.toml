@@ -2,7 +2,7 @@
 name = "api"
 version = "0.1.0"
 description = ""
-authors = ["deadonted <timofejmitusin60892@gmail.com>"]
+authors = ["neojelll <timofejmitusin60892@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -26,6 +26,10 @@ pytest-cov = "^5.0.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "github"
+url = "https://nuget.pkg.github.com/neojelll/index.json"
 
 
 [tool.ruff]
