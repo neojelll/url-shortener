@@ -34,7 +34,5 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
-      - name: Build package and publish
-        run: |
-          poetry config pypi-token.pypi API_PACKAGE_TOKEN
-          poetry publish --build
+      - name: Build package
+        run: poetry build
