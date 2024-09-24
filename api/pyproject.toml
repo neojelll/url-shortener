@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "api"
+name = "neojelll-url-shortener-api"
 version = "0.1.0"
 description = ""
 authors = ["neojelll <timofejmitusin60892@gmail.com>"]
@@ -26,10 +26,6 @@ pytest-cov = "^5.0.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[[tool.poetry.source]]
-name = "github"
-url = "https://nuget.pkg.github.com/neojelll/index.json"
 
 
 [tool.ruff]
