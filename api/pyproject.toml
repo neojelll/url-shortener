@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "neojelll-url-shortener"
+name = "neojelll-url-shortener-api"
 version = "0.1.0"
 description = ""
 authors = ["neojelll <timofejmitusin60892@gmail.com>"]
