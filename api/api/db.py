@@ -1,46 +1,37 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from sqlalchemy import Column, Integer, String, Text, TIMESTAMP, ForeignKey
-from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker, AsyncAttrs
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship, DeclarativeBase
 from sqlalchemy import select
 from loguru import logger
 
+USERNAME = "your_username"
+PASSWORD = "your_password"
+HOST = "remote_host_address"
+PORT = "5432"
+DATABASE = "your_database_name"
 
-USERNAME = 'your_username'
-PASSWORD = 'your_password'
-HOST = 'remote_host_address'
-PORT = '5432'
-DATABASE = 'your_database_name'
+DATABASE_URL = f"postgresql+asyncpg://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
-
-DATABASE_URL = f'postgresql+asyncpg://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
-
-Base = declarative_base()
+class Base(AsyncAttrs, DeclarativeBase):
+    pass
 
 class LongUrl(Base):
     __tablename__ = 'long_url'
-
     long_id = Column(Integer, primary_key=True)
-    long_value = Column(Text, unique=True, nullable=False)
-
+    long_value = Column(String(250), unique=True, nullable=False)
 
 class ShortUrl(Base):
     __tablename__ = 'short_url'
-
-    short_id = Column(String(20), primary_key=True)
-    short_value = Column(Text, nullable=False)
-    created_at = Column(TIMESTAMP)
-
+    short_id = Column(Integer, primary_key=True)
+    short_value = Column(String(250), nullable=False)
 
 class UrlMapping(Base):
     __tablename__ = 'url_mapping'
-
-    short_id = Column(String(20), ForeignKey('short_url.short_id'), primary_key=True)
+    short_id = Column(Integer, ForeignKey('short_url.short_id'), primary_key=True)
     long_id = Column(Integer, ForeignKey('long_url.long_id'), nullable=False)
-    expiration_date = Column(TIMESTAMP)
-
+    expiration = Column(Integer, nullable=False)
     short_url = relationship('ShortUrl', backref='url_mappings')
     long_url = relationship('LongUrl', backref='url_mappings')
-
 
 class DataBase:
     def __init__(self):
@@ -58,18 +49,30 @@ class DataBase:
                 .join(UrlMapping)
                 .join(ShortUrl)
                 .where(ShortUrl.short_value == short_value)
-            )
-
+            )          
             long_url = result.scalars().first()
-
             if long_url is not None:
                 return long_url.long_value
             return None
-
+        except Exception as e:
+            logger.error(f"An error occurred while fetching long URL: {e}")
+            return None
+        
+    async def get_expiration(self, short_value):
+        try:
+            result = await self.session.execute(
+                select(UrlMapping)
+                .join(ShortUrl)
+                .where(ShortUrl.short_value == short_value)
+            )
+            url_mapping = result.scalars().first()
+            if url_mapping is not None:
+                return url_mapping.expiration
+            return None
         except Exception as e:
             logger.error(f"An error occurred while fetching long URL: {e}")
             return None
 
     async def __aexit__(self, exc_type, exc_value, traceback):
-        await self.session.close()
+        await self.session.aclose()
       
