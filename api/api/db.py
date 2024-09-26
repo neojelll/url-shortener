@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker, AsyncAttrs
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase
 from sqlalchemy import select
 from loguru import logger
@@ -30,6 +30,7 @@ class UrlMapping(Base):
     short_id = Column(Integer, ForeignKey('short_url.short_id'), primary_key=True)
     long_id = Column(Integer, ForeignKey('long_url.long_id'), nullable=False)
     expiration = Column(Integer, nullable=False)
+    date = Column(TIMESTAMP, nullable=False)
     short_url = relationship('ShortUrl', backref='url_mappings')
     long_url = relationship('LongUrl', backref='url_mappings')
 
