@@ -67,11 +67,12 @@ async def get_request(short_url):
         else:
             async with DataBase() as database:
                 long_url = await database.get_long_url(short_url)
+                expiration = await database.get_expiration(short_url)
 
-            if long_url is None:
+            if long_url is None or expiration is None:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail="URL is not found")
-            await cache.set(short_url, long_url)
+            await cache.set(short_url, long_url, expiration / 3600)
     return {"long_url": f"{long_url}"}
 
 
@@ -87,11 +88,12 @@ async def redirect_request(short_url: str):
         else:
             async with DataBase() as database:
                 long_url = await database.get_long_url(short_url)
+                expiration = await database.get_expiration(short_url)
 
-                if long_url is None:
-                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+            if long_url is None or expiration is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                         detail="URL is not valid")
-        await cache.set(short_url, long_url)
+            await cache.set(short_url, long_url, expiration / 3600)
 
     logger.debug(f"Redirect response completed. returned: Redirect to {repr(long_url)}")
     return RedirectResponse(url=long_url, status_code=status.HTTP_302_FOUND) #type: ignore
