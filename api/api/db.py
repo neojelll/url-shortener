@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase
 from sqlalchemy import select
+from datetime import datetime, time, timedelta
 from loguru import logger
 
 USERNAME = "your_username"
@@ -68,7 +69,10 @@ class DataBase:
             )
             url_mapping = result.scalars().first()
             if url_mapping is not None:
-                return url_mapping.expiration
+                expiration, date = url_mapping.expiration, url_mapping.date
+                create_time = date.hour
+                current_time = datetime.now().time().hour
+                return max(int((create_time + expiration) - current_time), 0)
             return None
         except Exception as e:
             logger.error(f"An error occurred while fetching long URL: {e}")

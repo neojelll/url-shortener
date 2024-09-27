@@ -75,7 +75,7 @@ async def test_get_cache_miss(mock_cache, mock_db, client):
 	mock_cache_instance.check.assert_awaited_once_with(SHORT_URL)
 	mock_db_instance.get_long_url.assert_awaited_once_with(SHORT_URL)
 	mock_db_instance.get_expiration.assert_awaited_once_with(SHORT_URL)
-	mock_cache_instance.set.assert_awaited_once_with(SHORT_URL, LONG_URL, EXPIRATION / 3600)
+	mock_cache_instance.set.assert_awaited_once_with(SHORT_URL, LONG_URL, EXPIRATION)
 
 @pytest.mark.asyncio
 async def test_get_no_db_record(mock_cache, mock_db, client):
@@ -110,7 +110,7 @@ async def test_redirect_cache_miss(mock_cache, mock_db, client):
 	assert response.status_code == status.HTTP_302_FOUND
 	mock_cache_instance.check.assert_awaited_once_with(SHORT_URL)
 	mock_db_instance.get_long_url.assert_awaited_once_with(SHORT_URL)
-	mock_cache_instance.set.assert_awaited_once_with(SHORT_URL, LONG_URL, EXPIRATION / 3600)
+	mock_cache_instance.set.assert_awaited_once_with(SHORT_URL, LONG_URL, EXPIRATION)
 
 @pytest.mark.asyncio
 async def test_redirect_no_db_record(mock_cache, mock_db, client):

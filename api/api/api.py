@@ -72,7 +72,7 @@ async def get_request(short_url):
             if long_url is None or expiration is None:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail="URL is not found")
-            await cache.set(short_url, long_url, expiration / 3600)
+            await cache.set(short_url, long_url, expiration)
     return {"long_url": f"{long_url}"}
 
 
@@ -93,7 +93,7 @@ async def redirect_request(short_url: str):
             if long_url is None or expiration is None:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                         detail="URL is not valid")
-            await cache.set(short_url, long_url, expiration / 3600)
+            await cache.set(short_url, long_url, expiration)
 
     logger.debug(f"Redirect response completed. returned: Redirect to {repr(long_url)}")
     return RedirectResponse(url=long_url, status_code=status.HTTP_302_FOUND) #type: ignore
