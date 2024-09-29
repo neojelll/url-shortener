@@ -17,7 +17,7 @@ jobs:
 
       - name: Check if version has changed
         run: |
-          git fetch fix/feature/api
+          git fetch origin fix/feature/api
           if ! git diff HEAD^ HEAD -- pyproject.toml | grep -q "version"; then
             exit 1
           fi
