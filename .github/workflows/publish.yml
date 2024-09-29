@@ -48,8 +48,8 @@ jobs:
         id: get_version
         run: |
           cd api
-          cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\w+'
-          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\w+')
+          cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\d\w+'
+          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\d\w+')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo $VERSION
           echo $GITHUB_ENV
