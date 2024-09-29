@@ -48,7 +48,7 @@ jobs:
         id: get_version
         run: |
           cd api
-          VERSION=$(cat pyproject.toml | grep *version =' | grep -Eo \d+l.1d+1.1d+(-\w+)?')
+          export VERSION=$(cat pyproject.toml | grep *version =' | grep -Eo \d+l.1d+1.1d+(-\w+)?')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Build docker image and publish
