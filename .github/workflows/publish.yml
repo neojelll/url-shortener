@@ -15,11 +15,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Check if version has changed
-      #   run: |
-      #     git fetch origin main
-      #     if ! git diff HEAD^ HEAD -- pyproject.toml | grep -q "version"; then
-      #       exit 1
+      - name: Check if version has changed
+        run: |
+          git fetch origin main
+          if ! git diff HEAD^ HEAD -- pyproject.toml | grep -q "version"; then
+            exit 1
+          fi
             
       - name: Set up Python
         uses: actions/setup-python@v2
