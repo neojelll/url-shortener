@@ -57,5 +57,5 @@ jobs:
       - name: Build docker image and publish
         run: |
           docker build --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }} .
-          echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io --username neojelll --password-stdin
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io --username neojelll --password-stdin
           docker push ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }}
