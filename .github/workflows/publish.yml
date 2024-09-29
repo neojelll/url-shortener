@@ -48,7 +48,7 @@ jobs:
         id: get_version
         run: |
           cd api
-          echo cat pyproject.toml | grep '^version =' | grep -Eo '\d+\.\d+\.\d+(-\w+)?'
+          cat pyproject.toml | grep '^version =' | grep -Eo '\d+\.\d+\.\d+(-\w+)?'
           export VERSION=$(cat pyproject.toml | grep '^version =' | grep -Eo '\d+\.\d+\.\d+(-\w+)?')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo $VERSION
