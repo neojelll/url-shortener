@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     branches:
-      - fix/feature/api
+      - main
     paths:
       - "**/pyproject.toml"
 
@@ -45,7 +45,7 @@ jobs:
           cd api
           poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
           poetry publish --build
-          sleep 5
+          sleep 10
 
       - name: Check version
         id: get_version
