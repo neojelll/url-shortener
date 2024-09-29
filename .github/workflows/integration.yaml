@@ -6,7 +6,7 @@ on:
       - feature/api
 
 jobs:
-  build:
+  integration:
     runs-on: ubuntu-latest
 
     steps:
