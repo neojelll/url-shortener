@@ -4,9 +4,9 @@ import sys
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 
-from api.message_broker import MessageBroker #type: ignore
-from api.db import DataBase #type: ignore
-from api.cache import Cache #type: ignore
+from .message_broker import MessageBroker #type: ignore
+from .db import DataBase #type: ignore
+from .cache import Cache #type: ignore
 
 from urllib.parse import urlparse
 from pydantic import BaseModel
