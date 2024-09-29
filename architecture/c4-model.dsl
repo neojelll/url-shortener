@@ -40,6 +40,8 @@ workspace {
             FirstExternalSystem -> Api "sending data"
             SecondExternalSystem -> Api "sending data"
             Api -> EventBus "sending data"
+            Api -> DataBase "try to request long url from db cache"
+            Api -> Cache "try to request long url from db cache"
             EventBus -> AnalyticsService "sending data"
             EventBus -> BackEnd "sending data"
             AnalyticsService -> AnalyticsDB "select data"

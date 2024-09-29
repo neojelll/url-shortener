@@ -27,8 +27,8 @@
 
 ### System 
 
-![System](architecture/new_diagrams/structurizr-SystemContext-001-2.png)
+![System](architecture/new_diagrams/structurizr-SystemContext-001.png)
 
 ### Container
 
-![Container](architecture/new_diagrams/structurizr-Container-001-2.png)
+![Container](architecture/new_diagrams/structurizr-Container-001.png)

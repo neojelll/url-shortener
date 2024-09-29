@@ -3,3 +3,8 @@
 
 #other
 .DS_Store
+.coverage
+
+#python
+__pycache__/
+*.pyс

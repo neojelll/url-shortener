@@ -1,0 +1,51 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/pyproject.toml"
+
+jobs:
+  check-version:
+    run-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check if version has changed
+        run: |
+          git fetch origin main
+          if ! git diff HEAD^ HEAD -- pyproject.toml | grep -q "version"; then
+            exit 1
+            
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Build and publish package
+        run: |
+          poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
+          poetry publish --build
+
+      - name: Check version
+        run: |
+          env:
+            VERSION: cat pyproject.toml | grep '^version =' | grep -Eo '\d+\.\d+\.\d+(-\w+)?'
+
+      - name: Build docker image and publish
+        run: |
+          docker build --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }} .
+          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io --username neojelll --password-stdin
+          docker push ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }}
