@@ -1,10 +1,13 @@
 from redis import Redis
 import os
 
+<<<<<<< Updated upstream
 def ttl():
 	result = os.environ["CACHE_TTL"]
 	return int(result)
 
+=======
+>>>>>>> Stashed changes
 class Cache(object):
 	def __init__(self):
 		self.cache = Redis(

@@ -10,7 +10,7 @@ EXPIRATION = 300
 @pytest_asyncio.fixture
 async def mock_cache(mocker):
 	mock_c = AsyncMock()
-	mocker.patch("api.cache.Redis", autospec=True, return_value=mock_c)
+	mocker.patch("neojelll_url_shortener_api.cache.Redis", autospec=True, return_value=mock_c)
 	cache = Cache()
 	async with cache as instance_cache:
 		yield instance_cache, mock_c
