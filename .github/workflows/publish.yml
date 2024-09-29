@@ -36,5 +36,16 @@ jobs:
 
       - name: Build and publish package
         run: |
-          poetry config pypi-token.pypi URL_SHORTENER_PUBLISH_TOKEN
+          poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
           poetry publish --build
+
+      - name: Check version
+        run: |
+          env:
+            VERSION: cat pyproject.toml | grep '^version =' | grep -Eo '\d+\.\d+\.\d+(-\w+)?'
+
+      - name: Build docker image and publish
+        run: |
+          docker build --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }} .
+          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io --username neojelll --password-stdin
+          docker push ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }}
