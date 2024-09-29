@@ -28,6 +28,7 @@ jobs:
       run: |
         cd api
         poetry run ruff check api
+        poetry run ruff format --check api 
 
     - name: Test with pytest
       run: |
