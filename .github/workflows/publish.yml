@@ -8,18 +8,22 @@ on:
       - "**/pyproject.toml"
 
 jobs:
-  check-version:
-    run-on: ubuntu-latest
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Check if version has changed
         run: |
-          git fetch origin main
-          if ! git diff HEAD^ HEAD -- pyproject.toml | grep -q "version"; then
+          if ! git diff HEAD^ HEAD -- api/pyproject.toml | grep -q "version"; then
             exit 1
+          fi
             
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -32,20 +36,29 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
-        run: poetry install
+        run: |
+          cd api
+          poetry install
 
       - name: Build and publish package
         run: |
+          cd api
           poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
           poetry publish --build
+          sleep 10
 
       - name: Check version
+        id: get_version
         run: |
-          env:
-            VERSION: cat pyproject.toml | grep '^version =' | grep -Eo '\d+\.\d+\.\d+(-\w+)?'
+          cd api
+          cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\d\w+'
+          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\d\w+')
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo $VERSION
+          echo $GITHUB_ENV
 
       - name: Build docker image and publish
         run: |
           docker build --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }} .
-          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io --username neojelll --password-stdin
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io --username neojelll --password-stdin
           docker push ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }}
