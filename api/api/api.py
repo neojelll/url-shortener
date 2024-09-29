@@ -4,9 +4,9 @@ import sys
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 
-from .message_broker import MessageBroker #type: ignore
-from .db import DataBase #type: ignore
-from .cache import Cache #type: ignore
+from .message_broker import MessageBroker  # type: ignore
+from .db import DataBase  # type: ignore
+from .cache import Cache  # type: ignore
 
 from urllib.parse import urlparse
 from pydantic import BaseModel
@@ -16,10 +16,18 @@ import uuid
 logger.remove()
 
 
-logger.add(sys.stderr, format="{time:YYYY-MM-DD at HH:mm:ss} <level>{level}</level> <red>{name}</red>: <red>{function}</red>({line}) - <cyan>{message}</cyan>", level="DEBUG")
+logger.add(
+    sys.stderr,
+    format="{time:YYYY-MM-DD at HH:mm:ss} <level>{level}</level> <red>{name}</red>: <red>{function}</red>({line}) - <cyan>{message}</cyan>",
+    level="DEBUG",
+)
 
 
-logger.add("api.log", format="{time:YYYY-MM-DD at HH:mm:ss} {level} {name}: {function}({line}) - {message}", level="DEBUG")
+logger.add(
+    "api.log",
+    format="{time:YYYY-MM-DD at HH:mm:ss} {level} {name}: {function}({line}) - {message}",
+    level="DEBUG",
+)
 
 
 def is_valid_url(url: str) -> bool:
@@ -45,8 +53,9 @@ async def post_url(data: ShortURLRequest):
     url = data.url
     if not is_valid_url(url):
         logger.error("Post request error. ERROR INFO: Invalid URL")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Invalid URL")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid URL"
+        )
     task_num = uuid.uuid5(uuid.NAMESPACE_DNS, urlparse(url).netloc)
     returned_value = {"task": str(task_num)}
 
@@ -61,8 +70,8 @@ async def post_url(data: ShortURLRequest):
 async def get_request(short_url):
     async with Cache() as cache:
         check = await cache.check(short_url)
-        
-        if not check is None:
+
+        if check is not None:
             long_url = check
         else:
             async with DataBase() as database:
@@ -70,8 +79,9 @@ async def get_request(short_url):
                 expiration = await database.get_expiration(short_url)
 
             if long_url is None or expiration is None:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail="URL is not found")
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND, detail="URL is not found"
+                )
             await cache.set(short_url, long_url, expiration)
     return {"long_url": f"{long_url}"}
 
@@ -79,11 +89,11 @@ async def get_request(short_url):
 @app.get("/{short_url}")
 async def redirect_request(short_url: str):
     logger.debug(f"Start redirect response... params: {repr(short_url)}")
-	
+
     async with Cache() as cache:
         check = await cache.check(short_url)
 
-        if not check is None:
+        if check is not None:
             long_url = check
         else:
             async with DataBase() as database:
@@ -91,9 +101,10 @@ async def redirect_request(short_url: str):
                 expiration = await database.get_expiration(short_url)
 
             if long_url is None or expiration is None:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                        detail="URL is not valid")
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND, detail="URL is not valid"
+                )
             await cache.set(short_url, long_url, expiration)
 
     logger.debug(f"Redirect response completed. returned: Redirect to {repr(long_url)}")
-    return RedirectResponse(url=long_url, status_code=status.HTTP_302_FOUND) #type: ignore
+    return RedirectResponse(url=long_url, status_code=status.HTTP_302_FOUND)  # type: ignore
