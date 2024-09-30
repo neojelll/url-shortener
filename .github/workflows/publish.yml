@@ -56,15 +56,13 @@ jobs:
       - name: Wait for package availability
         run: |
           while true; do
-            RESPONSE=$(curl -s "https://pypi.org/pypi/neoje1l-url-shortener-api/json")
-            VERSION_EXISTS=$(echo "$RESPONSE" | jq --arg version "$VERSION" '.releases | has($version)')
+            VERSION_EXISTS=$(echo curl -s "https://pypi.org/pypi/neoje1l-url-shortener-api/json" | jq --arg version "$VERSION" '.releases | has($version)')
             if [ "$VERSION_EXISTS" = "true" ]; then
               break
             else
               sleep 2
             fi
           done
-
 
       - name: Build docker image and publish
         run: |
