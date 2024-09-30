@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     branches:
-      - main
+      - fix/api/publish
     paths:
       - "**/pyproject.toml"
 
@@ -51,7 +51,7 @@ jobs:
         id: get_version
         run: |
           cd api
-          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\w+')
+          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\d\w+')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Build docker image and publish
