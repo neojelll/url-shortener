@@ -53,15 +53,18 @@ jobs:
           export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\d\w+')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
-      - name: Poll for package availability
+      - name: Wait for package availability
         run: |
-          jq --version
           while true; do
-            if echo curl -s "https://pypi.org/pypi/neojelll-url-shortener-api/json" | grep -q "\"$VERSION\""; then
+            RESPONSE=$(curl -s "https://pypi.org/pypi/neoje1l-url-shortener-api/json")
+            VERSION_EXISTS=$(echo "$RESPONSE" | jq --arg version "$VERSION" '.releases | has($version)')
+            if [ "$VERSION_EXISTS" = "true" ]; then
               break
-            sleep 2
+            else
+              sleep 2
             fi
           done
+
 
       - name: Build docker image and publish
         run: |
