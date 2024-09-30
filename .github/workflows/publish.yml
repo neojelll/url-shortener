@@ -56,7 +56,7 @@ jobs:
       - name: Wait for package availability
         run: |
           while true; do
-            RESPONSE=$(curl -s "https://pypi.org/pypi/${PACKAGE_NAME}/json")
+            RESPONSE=$(curl -s "https://pypi.org/pypi/neojelll-url-shortener-api/json")
             echo "$RESPONSE"
             VERSION_EXISTS=$(echo "$RESPONSE" | jq --arg version "$VERSION" '.releases | has($version)')
             echo "Проверяем, существует ли версия '$VERSION': $VERSION_EXISTS"
