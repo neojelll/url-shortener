@@ -60,7 +60,7 @@ jobs:
             if echo "$RESPONSE" | grep -q "\"$VERSION\""; then
               break
             else
-              sleep 2
+              exit 1
             fi
           done
 
