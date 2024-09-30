@@ -56,7 +56,10 @@ jobs:
       - name: Wait for package availability
         run: |
           while true; do
-            VERSION_EXISTS=$(echo curl -s "https://pypi.org/pypi/neoje1l-url-shortener-api/json" | jq --arg version "$VERSION" '.releases | has($version)')
+            RESPONSE=$(curl -s "https://pypi.org/pypi/neoje1l-url-shortener-api/json")
+            VERSION_EXISTS=$(echo "$RESPONSE" | jq --arg version "${{ env.VERSION }}" '.releases | has($version)')
+            echo jq .releases
+            echo $VERSION
             if [ "$VERSION_EXISTS" = "true" ]; then
               break
             else
