@@ -55,8 +55,9 @@ jobs:
 
       - name: Poll for package availability
         run: |
+          jq --version
           while true; do
-            if echo curl -s "https://pypi.org/pypi/neojelll-url-shortener-api/json" | grep -q "$VERSION"; then
+            if echo curl -s "https://pypi.org/pypi/neojelll-url-shortener-api/json" | grep -q "\"$VERSION\""; then
               break
             sleep 2
             fi
