@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neojelll-url-shortener-api"
-version = "0.1.1rc29"
+version = "0.1.1rc30"
 description = ""
 authors = ["neojelll <timofejmitusin60892@gmail.com>"]
 readme = "README.md"
