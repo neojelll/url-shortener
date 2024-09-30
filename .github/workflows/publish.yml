@@ -57,10 +57,10 @@ jobs:
       - name: Build docker image and publish
         run: |
           while true; do
-            if python -m pip search neojelll-url-shortener-api==${{ env.VERSION }} | grep -q "${PACKAGE_NAME}==${VERSION}"; then
+            if python -m pip search neojelll-url-shortener-api==${{ env.VERSION }} | grep -q neojelll-url-shortener-api==${VERSION}; then
               break
             else
-                sleep 5
+                sleep 2
             fi
           done
           docker build --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }} .
