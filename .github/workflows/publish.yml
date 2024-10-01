@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     branches:
-      - fix/api/publish
+      - main
     paths:
       - "**/pyproject.toml"
 
@@ -50,21 +50,17 @@ jobs:
         id: get_version
         run: |
           cd api
-          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\d\w+')
+          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\w+')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Wait for package availability
         run: |
           while true; do
             RESPONSE=$(curl -s "https://pypi.org/pypi/neojelll-url-shortener-api/json")
-            echo "$RESPONSE"
             VERSION_EXISTS=$(echo "$RESPONSE" | jq --arg version "$VERSION" '.releases | has($version)')
-            echo "Проверяем, существует ли версия '$VERSION': $VERSION_EXISTS"
             if [ "$VERSION_EXISTS" = "true" ]; then
-              echo "Версия $VERSION существует."
               break
             else
-              echo "Версия $VERSION не найдена. Повтор через 2 секунды..."
               sleep 2
             fi
           done
