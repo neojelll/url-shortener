@@ -56,7 +56,7 @@ jobs:
       - name: Wait for package availability
         run: |
           while true; do
-            if echo "$(curl -sSL "https://pypi.org/simple/neojelll-url-shortener-api")" | grep -q "neojelll-url-shortener-api-$VERSION"; then
+            if echo "$(curl -sSL "https://pypi.org/simple/neojelll-url-shortener-api")" | grep -q "neojelll_url_shortener_api-$VERSION"; then
               echo "Version $VERSION is available."
               break
             else
