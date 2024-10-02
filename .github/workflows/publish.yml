@@ -55,7 +55,14 @@ jobs:
 
       - name: Wait for package availability
         run: |
-          pip install neojelll-url-shortener-api==$VERSION --dry-run
+          while true; do
+            pip install neojelll-url-shortener-api==$VERSION --dry-run
+            if [ $? -ne 0 ]; then
+              sleep 2
+            else:
+              break
+            fi
+          done
 
       - name: Build docker image and publish
         run: |
