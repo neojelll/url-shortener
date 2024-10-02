@@ -56,11 +56,12 @@ jobs:
       - name: Wait for package availability
         run: |
           while true; do
-            pip install neojelll-url-shortener-api==$VERSION --dry-run
-            if [ $? -ne 0 ]; then
-              sleep 2
-            else:
+            if pip install neojelll-url-shortener-api==$VERSION --dry-run; then
+              echo "Версия $VERSION доступна для установки."
               break
+            else
+              echo "Версия $VERSION недоступна. Повторная попытка через 2 секунды..."
+              sleep 2
             fi
           done
 
