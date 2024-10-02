@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     branches:
-      - fix/api/publish
+      - main
     paths:
       - "**/pyproject.toml"
 
@@ -50,17 +50,17 @@ jobs:
         id: get_version
         run: |
           cd api
-          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\d\w+')
+          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\w+')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Wait for package availability
         run: |
           while true; do
             if pip install neojelll-url-shortener-api==$VERSION --dry-run; then
-              echo "Версия $VERSION доступна для установки."
+              echo "The $VERSION version is available for installation."
               break
             else
-              echo "Версия $VERSION недоступна. Повторная попытка через 2 секунды..."
+              echo "$VERSION is not available. Try again in 2 seconds..."
               sleep 2
             fi
           done
