@@ -52,12 +52,12 @@ class DataBase():
         self.session = await self.async_session() #type: ignore
         return self
         
-    async def expiration_manager(self):
+    async def delete_after_time(self):
         current_time = datetime.now()
         result = await self.session.execute(
             delete(UrlMapping).where(
             (current_time - UrlMapping.date).seconds >= UrlMapping.expiration
-        )
+            )
 		)
         await self.session.commit()
         return result.rowcount()
