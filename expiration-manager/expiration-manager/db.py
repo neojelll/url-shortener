@@ -54,13 +54,18 @@ class DataBase():
         
     async def delete_after_time(self):
         current_time = datetime.now()
-        result = await self.session.execute(
-            delete(UrlMapping).where(
-            (current_time - UrlMapping.date).seconds >= UrlMapping.expiration
+        try:
+            result = await self.session.execute(
+                delete(UrlMapping).where(
+                    (current_time - UrlMapping.date).seconds >= UrlMapping.expiration
+                )
             )
-		)
-        await self.session.commit()
-        return result.rowcount()
+            await self.session.commit()
+            return result.rowcount
+        except Exception as e:
+            print(f"Ошибка при удалении записей: {e}")
+            await self.session.rollback()
+            return 0
         
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.session.aclose()
