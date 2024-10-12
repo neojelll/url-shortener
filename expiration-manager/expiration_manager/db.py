@@ -7,23 +7,10 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase
 from sqlalchemy import delete, func
-from datetime import datetime
+from .logger import configure_logger
 from loguru import logger
-import sys
 
-logger.remove()
-
-logger.add(
-    sys.stderr,
-    format="{time:YYYY-MM-DD at HH:mm:ss} <level>{level}</level> <red>{name}</red>: <red>{function}</red>({line}) - <cyan>{message}</cyan>",
-    level="DEBUG",
-)
-
-logger.add(
-    "expiration-manager.log",
-    format="{time:YYYY-MM-DD at HH:mm:ss} {level} {name}: {function}({line}) - {message}",
-    level="DEBUG",
-)
+configure_logger()
 
 USERNAME = "your_username"
 PASSWORD = "your_password"
@@ -69,7 +56,6 @@ class DataBase():
         return self
         
     async def delete_after_time(self):
-        current_time = datetime.now()
         try:
             result = await self.session.execute(
                 delete(UrlMapping).where(
@@ -77,6 +63,7 @@ class DataBase():
                 )
             )
             await self.session.commit()
+            logger.info(f"Все записи с истекшин временем хранения удалены")
             return result.rowcount
         except Exception as e:
             logger.error(f"Ошибка при удалении записей: {e}")
