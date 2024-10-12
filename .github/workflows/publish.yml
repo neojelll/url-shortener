@@ -45,17 +45,25 @@ jobs:
           cd api
           poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
           poetry publish --build
-          sleep 10
 
       - name: Check version
         id: get_version
         run: |
           cd api
-          cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\d\w+'
-          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\d\w+')
+          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\w+')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo $VERSION
-          echo $GITHUB_ENV
+
+      - name: Wait for package availability
+        run: |
+          while true; do
+            if pip install neojelll-url-shortener-api==$VERSION --dry-run; then
+              echo "The $VERSION version is available for installation."
+              break
+            else
+              echo "$VERSION is not available. Try again in 2 seconds..."
+              sleep 2
+            fi
+          done
 
       - name: Build docker image and publish
         run: |
