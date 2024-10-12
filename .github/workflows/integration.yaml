@@ -32,9 +32,10 @@ jobs:
     - name: Install Poetry and project dependencies
       if: env.SKIP_REMAINING_STEPS != 'true'
       run: |
+        PROJECT_NAME="${PROJECT_NAME//-/_}"
         python -m pip install --upgrade pip
         python -m pip install poetry
-        cd ${${{ env.PROJECT_NAME }}//-/_}
+        cd $PROJECT_NAME
         poetry install
 
     - name: Lint with Ruff
