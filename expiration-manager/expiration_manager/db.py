@@ -45,31 +45,33 @@ class UrlMapping(Base):
     date = Column(TIMESTAMP, nullable=False)
     short_url = relationship("ShortUrl", backref="url_mappings")
     long_url = relationship("LongUrl", backref="url_mappings")
-    
-class DataBase():
+
+
+class DataBase:
     def __init__(self):
         self.async_engine = create_async_engine(DATABASE_URL, echo=True, future=True)
-        self.async_session = async_sessionmaker(bind=self.async_engine, _class=AsyncSession, expire_on_commit=False)
-    
+        self.async_session = async_sessionmaker(
+            bind=self.async_engine, _class=AsyncSession, expire_on_commit=False
+        )
+
     async def __aenter__(self):
-        self.session = await self.async_session() #type: ignore
+        self.session = await self.async_session()  # type: ignore
         return self
-        
+
     async def delete_after_time(self):
         try:
             result = await self.session.execute(
                 delete(UrlMapping).where(
-                UrlMapping.date <= (func.now() - (func.make_interval(hours=UrlMapping.expiration)))
+                    UrlMapping.date <= func.now() - func.interval(UrlMapping.expiration, "hour")
                 )
             )
             await self.session.commit()
-            logger.info(f"Все записи с истекшин временем хранения удалены")
+            logger.info("Все записи с истекшим временем хранения удалены")
             return result.rowcount
         except Exception as e:
             logger.error(f"Ошибка при удалении записей: {e}")
             await self.session.rollback()
             return 0
-        
+
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.session.aclose()
-        
