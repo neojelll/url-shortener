@@ -2,6 +2,7 @@ from expiration_manager.manager import expiration_manager
 from unittest.mock import AsyncMock
 import pytest
 
+
 @pytest.mark.asyncio
 async def test_expiration_manager(mocker):
     mock_db_class = mocker.patch("expiration_manager.manager.DataBase", autospec=True)
