@@ -66,10 +66,10 @@ class DataBase:
                 )
             )
             await self.session.commit()
-            logger.info("Все записи с истекшим временем хранения удалены")
+            logger.info("All records with expired storage time are deleted")
             return result.rowcount
         except Exception as e:
-            logger.error(f"Ошибка при удалении записей: {e}")
+            logger.error(f"Error when deleting records: {e}")
             await self.session.rollback()
             return 0
 

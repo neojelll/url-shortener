@@ -25,17 +25,16 @@ jobs:
         export PROJECT_NAME=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
         echo "PROJECT_NAME=${PROJECT_NAME}" >> $GITHUB_ENV
         if [[ $PROJECT_NAME == .* || $PROJECT_NAME == *.log || $PROJECT_NAME == README.md ]]; then
-          echo "Warning: PROJECT_NAME ($PROJECT_NAME) не подходит, дальнейшие шаги будут пропущены."
+          echo "Warning: PROJECT_NAME ($PROJECT_NAME) does not fit, further steps will be skipped."
           echo "SKIP_REMAINING_STEPS=true" >> $GITHUB_ENV
         fi
 
     - name: Install Poetry and project dependencies
       if: env.SKIP_REMAINING_STEPS != 'true'
       run: |
-        PROJECT_NAME="${PROJECT_NAME//-/_}"
         python -m pip install --upgrade pip
         python -m pip install poetry
-        cd $PROJECT_NAME
+        cd ${{ env.PROJECT_NAME }}
         poetry install
 
     - name: Lint with Ruff
