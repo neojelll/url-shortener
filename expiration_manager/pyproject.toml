@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "expiration-manager"
+name = "neojelll-url-shortener-expiration-manager"
 version = "0.1.0"
 description = ""
-authors = ["deadonted <timofejmitusin60892@gmail.com>"]
+authors = ["neojelll <timofejmitusin60892@gmail.com>"]
 readme = "README.md"
 
 packages = [
