@@ -62,7 +62,8 @@ class DataBase:
         try:
             result = await self.session.execute(
                 delete(UrlMapping).where(
-                    UrlMapping.date <= func.now() - func.interval(UrlMapping.expiration, "hour")
+                    UrlMapping.date
+                    <= func.now() - func.interval(UrlMapping.expiration, "hour")
                 )
             )
             await self.session.commit()
