@@ -8,5 +8,5 @@ async def expiration_manager():
     return rowcount
 
 
-def run_expiration_manager():
+def run():
     asyncio.run(expiration_manager())
