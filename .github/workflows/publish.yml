@@ -70,6 +70,12 @@ jobs:
             fi
           done
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Build docker image and publish
         run: |
           cd ${{ env.PROJECT_NAME }}
