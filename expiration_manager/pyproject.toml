@@ -6,7 +6,7 @@ authors = ["deadonted <timofejmitusin60892@gmail.com>"]
 readme = "README.md"
 
 packages = [
-	{ include = "expiration-manager" }
+	{ include = "expiration_manager" }
 ]
 
 [tool.poetry.dependencies]
