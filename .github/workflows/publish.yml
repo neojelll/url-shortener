@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     branches:
-      - feat/expiration_manager
+      - main
     paths:
       - "**/pyproject.toml"
 
@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -31,7 +31,7 @@ jobs:
           fi
             
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
