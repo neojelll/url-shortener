@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "neojelll-url-shortener-service"
+version = "0.1.0"
+description = ""
+authors = ["deadonted <timofejmitusin60892@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
