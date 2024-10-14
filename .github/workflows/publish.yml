@@ -15,18 +15,23 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      - name: Check Project name
+        run: |
+          export PROJECT_NAME=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
+          echo "PROJECT_NAME=${PROJECT_NAME}" >> $GITHUB_ENV
+
       - name: Check if version has changed
         run: |
-          if ! git diff HEAD^ HEAD -- api/pyproject.toml | grep -q "version"; then
+          if ! git diff HEAD^ HEAD -- ${{ env.PROJECT_NAME }}/pyproject.toml | grep -q "version"; then
             exit 1
           fi
             
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
@@ -37,26 +42,26 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd api
+          cd ${{ env.PROJECT_NAME }}
           poetry install
 
       - name: Build and publish package
         run: |
-          cd api
+          cd ${{ env.PROJECT_NAME }}
           poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
           poetry publish --build
 
       - name: Check version
         id: get_version
         run: |
-          cd api
+          cd ${{ env.PROJECT_NAME }}
           export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\w+')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Wait for package availability
         run: |
           while true; do
-            if pip install neojelll-url-shortener-api==$VERSION --dry-run; then
+            if pip install neojelll-url-shortener-${{ env.PROJECT_NAME }}==$VERSION --dry-run; then
               echo "The $VERSION version is available for installation."
               break
             else
@@ -65,8 +70,16 @@ jobs:
             fi
           done
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Build docker image and publish
         run: |
-          docker build --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }} .
+          cd ${{ env.PROJECT_NAME }}
+          PROJECT_NAME=$(echo "${{ env.PROJECT_NAME }}" | tr '_' '-')
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io --username neojelll --password-stdin
-          docker push ghcr.io/neojelll/url-shortener-api:${{ env.VERSION }}
+          docker buildx create --use
+          docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-$PROJECT_NAME:${{ env.VERSION }} --push .
