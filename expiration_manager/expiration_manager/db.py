@@ -51,11 +51,11 @@ class DataBase:
     def __init__(self):
         self.async_engine = create_async_engine(DATABASE_URL, echo=True, future=True)
         self.async_session = async_sessionmaker(
-            bind=self.async_engine, _class=AsyncSession, expire_on_commit=False
+            bind=self.async_engine, class_=AsyncSession, expire_on_commit=False
         )
 
     async def __aenter__(self):
-        self.session = await self.async_session()  # type: ignore
+        self.session = self.async_session()
         return self
 
     async def delete_after_time(self):
