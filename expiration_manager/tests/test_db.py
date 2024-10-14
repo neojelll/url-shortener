@@ -1,6 +1,6 @@
 import pytest
 import pytest_asyncio
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, MagicMock
 from expiration_manager.db import DataBase
 
 
@@ -11,7 +11,7 @@ async def mock_db(mocker):
         "expiration_manager.db.async_sessionmaker", autospec=True
     )
     mock_session = AsyncMock()
-    mock_sessionmaker.return_value = AsyncMock(return_value=mock_session)
+    mock_sessionmaker.return_value = MagicMock(return_value=mock_session)
     db = DataBase()
     async with db as db_instance:
         yield db_instance, mock_session
