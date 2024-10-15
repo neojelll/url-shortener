@@ -69,13 +69,19 @@ class DataBase:
                 long_id=new_long_url.long_id,
                 short_id=new_short_url.short_id,
                 expiration=expiration,
-                date=func.now()
+                date=func.now(),
             )
             self.session.add(new_url_mapping)
             await self.session.commit()
-            logger.info(f"New long URL created: {new_long_url.long_value} with ID: {new_long_url.long_id}")
-            logger.info(f"New short URL created: {new_short_url.short_value} with ID: {new_short_url.short_id}")
-            logger.info(f"New UrlMapping created with long ID: {new_long_url.long_id} and short ID: {new_short_url.short_id}")
+            logger.info(
+                f"New long URL created: {new_long_url.long_value} with ID: {new_long_url.long_id}"
+            )
+            logger.info(
+                f"New short URL created: {new_short_url.short_value} with ID: {new_short_url.short_id}"
+            )
+            logger.info(
+                f"New UrlMapping created with long ID: {new_long_url.long_id} and short ID: {new_short_url.short_id}"
+            )
         except Exception as e:
             logger.error(f"Error when writing data to the DB: {e}")
 
