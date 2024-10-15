@@ -12,10 +12,10 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.12"
 kafka-python-ng = "^2.2.2"
-redis = "^5.0.8"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.35"}
 asyncpg = "^0.29.0"
 loguru = "^0.7.2"
+redis = "^5.1.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.4"
