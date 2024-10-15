@@ -32,7 +32,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "-v --cov=expiration_manager --cov-report term-missing --cov-fail-under=100"
+addopts = "-v --cov=url_shortener_service --cov-report term-missing --cov-fail-under=100"
 
 [tool.coverage.run]
 omit = [
