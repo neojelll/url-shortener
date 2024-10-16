@@ -58,7 +58,7 @@ class DataBase:
         self.session = self.async_session()
         return self
 
-    async def create_recording(self, long_url, short_url, expiration):
+    async def create_recording(self, short_url, long_url, expiration):
         try:
             new_long_url = LongUrl(long_value=long_url)
             new_short_url = ShortUrl(short_value=short_url)
