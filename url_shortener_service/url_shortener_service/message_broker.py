@@ -25,6 +25,7 @@ class MessageBroker:
             while True:
                 async for msg in self.consumer:
                     if msg.value is not None:
+                        logger.debug(f"got data from kafka: {msg.value.decode("utf-8")}")
                         yield msg.value.decode("utf-8")
                     logger.warning("Received a message is None value")
         except Exception as e:
