@@ -22,12 +22,11 @@ class MessageBroker:
 
     async def consume_data(self):
         try:
-            while True:
-                async for msg in self.consumer:
-                    if msg.value is not None:
-                        logger.debug(f"got data from kafka: {msg.value.decode("utf-8")}")
-                        yield msg.value.decode("utf-8")
-                    logger.warning("Received a message is None value")
+            async for msg in self.consumer:
+                if msg.value is not None:
+                    logger.debug(f"got data from kafka: {msg.value.decode('utf-8')}")
+                    yield msg.value.decode("utf-8")
+                logger.warning("Received a message is None value")
         except Exception as e:
             logger.error(f"Error when consume data from kafka: {e}")
 
