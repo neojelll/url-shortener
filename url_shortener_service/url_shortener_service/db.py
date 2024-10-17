@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase
+from sqlalchemy.future import select
 from sqlalchemy import func
 from .logger import configure_logger
 from loguru import logger
@@ -84,6 +85,20 @@ class DataBase:
             )
         except Exception as e:
             logger.error(f"Error when writing data to the DB: {e}")
+
+    async def check_short_url(self, short_value):
+        try:
+            result = await self.session.execute(
+                select(ShortUrl).where(ShortUrl.short_value == short_value)
+            )
+            short_url = result.scalars().first()
+            if short_url is not None:
+                logger.info(f"Short_url '{short_value}' exists in db")
+            else:
+                logger.info(f"Short_url '{short_value}' does not exists in db")
+            return short_url
+        except Exception as e:
+            logger.error(f"Error when checking short_url from db: {e}")
 
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.session.aclose()
