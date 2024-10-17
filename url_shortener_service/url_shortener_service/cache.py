@@ -27,5 +27,17 @@ class Cache:
         except Exception as e:
             logger.error(f"Error when writing data to the cache: {e}")
 
+    async def check_short_url(self, short_url):
+        try:
+            exists = await self.session.exists(short_url)
+            if exists:
+                logger.info(f"Short_url '{short_url}' exists in cache")
+            else:
+                logger.info(f"Short_url '{short_url}' does not exists in cache")
+            return exists
+        except Exception as e:
+            logger.error(f"Error when cheking short_url in cache: {e}")
+            return False
+
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.session.aclose()
