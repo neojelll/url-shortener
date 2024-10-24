@@ -1,0 +1,19 @@
+services:
+  api:
+    image: ghcr.io/neojelll/url-shortener-api:0.1.4
+    ports:
+      - "8000:8000"
+  
+  expiration-manager:
+    image: ghcr.io/neojelll/url-shortener-expiration-manager:0.1.14
+
+  kafka:
+    image: bashj79/kafka-kraft:latest
+
+  redis:
+    image: redis:latest
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: "123"
