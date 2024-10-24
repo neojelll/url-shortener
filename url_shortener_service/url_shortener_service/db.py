@@ -99,6 +99,7 @@ class DataBase:
             return short_url
         except Exception as e:
             logger.error(f"Error when checking short_url from db: {e}")
+            return None
 
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.session.aclose()

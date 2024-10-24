@@ -1,12 +1,16 @@
 from .message_broker import MessageBroker
 from .shortener_service import check_short_url
+from .logger import configure_logger
 from .db import DataBase
 from .cache import Cache
 import asyncio
 import json
 
 
-async def main():
+configure_logger()
+
+
+async def main() -> None:
     async with MessageBroker() as broker:
         async for message in broker.consume_data():
             data = json.loads(message)
@@ -19,5 +23,5 @@ async def main():
                 await db.create_recording(short_url, long_url, expiration)
 
 
-def run():
+def run() -> None:
     asyncio.run(main())

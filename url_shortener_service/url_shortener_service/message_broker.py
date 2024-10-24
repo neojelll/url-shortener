@@ -1,7 +1,6 @@
 from aiokafka import AIOKafkaConsumer
 from .logger import configure_logger
 from loguru import logger
-import asyncio
 
 
 configure_logger()
@@ -10,10 +9,7 @@ configure_logger()
 class MessageBroker:
     def __init__(self):
         self.consumer = AIOKafkaConsumer(
-            "my_topic",
-            bootstrap_servers="localhost:9092",
-            loop=asyncio.get_event_loop(),
-            group_id="group_1",
+            "my_topic", bootstrap_servers="localhost:9092", group_id="group_1"
         )
 
     async def __aenter__(self):
@@ -23,6 +19,7 @@ class MessageBroker:
     async def consume_data(self):
         try:
             async for msg in self.consumer:
+                logger.debug("start cycle")
                 if msg.value is not None:
                     logger.debug(f"got data from kafka: {msg.value.decode('utf-8')}")
                     yield msg.value.decode("utf-8")

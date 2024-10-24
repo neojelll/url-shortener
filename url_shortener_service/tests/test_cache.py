@@ -51,3 +51,22 @@ async def test_create_recording_error(mock_cache):
     cache, mock_session = mock_cache
     mock_session.set = AsyncMock(side_effect=Exception("Cache error"))
     await cache.create_recording(SHORT_URL, LONG_URL, EXPIRATION)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("expected, exists_return", [(False, False), (True, True)])
+async def test_check_short_url(mock_cache, expected, exists_return):
+    cache, mock_session = mock_cache
+    mock_session.exists = AsyncMock(return_value=exists_return)
+    result = await cache.check_short_url(SHORT_URL)
+    assert result == expected
+    mock_session.exists.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_check_short_url_error(mock_cache):
+    cache, mock_session = mock_cache
+    mock_session.exists.side_effect = Exception("Check Short_url error")
+    result = await cache.check_short_url(SHORT_URL)
+    assert not result
+    mock_session.exists.assert_awaited_once()

@@ -50,3 +50,24 @@ async def test_create_recording_error(mock_db):
     mock_session.add = MagicMock(side_effect=Exception("DB error"))
     mock_session.commit = AsyncMock()
     await db.create_recording(LONG_URL, SHORT_URL, EXPIRATION)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("expected, short_url", [(None, None), (SHORT_URL, SHORT_URL)])
+async def test_check_short_url(mock_db, expected, short_url):
+    db, mock_session = mock_db
+    execute_result = MagicMock()
+    mock_session.execute.return_value = execute_result
+    execute_result.scalars.return_value.first.return_value = short_url
+    result = await db.check_short_url(SHORT_URL)
+    assert result == expected
+    mock_session.execute.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_check_short_url_error(mock_db):
+    db, mock_session = mock_db
+    mock_session.execute.side_effect = Exception("DB error")
+    result = await db.check_short_url(SHORT_URL)
+    assert result is None
+    mock_session.execute.assert_awaited_once()
