@@ -7,7 +7,7 @@ import os
 configure_logger()
 
 
-def ttl():
+async def ttl():
     try:
         result = os.environ["CACHE_TTL"]
         return int(result)
@@ -16,7 +16,7 @@ def ttl():
         return 3600
 
 
-class Cache():
+class Cache:
     def __init__(self):
         self.cache = Redis(host="localhost", port=6379, decode_responses=True)
 
@@ -28,7 +28,7 @@ class Cache():
 
     async def set(self, short_url, long_url, expiration):
         try:
-            await self.cache.set(short_url, long_url, ex=min(ttl(), expiration))
+            await self.cache.set(short_url, long_url, ex=min(await ttl(), expiration))
             logger.debug("set to cache sucsessfully")
         except Exception as e:
             logger.error(f"Error when set in cache: {e}")
