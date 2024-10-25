@@ -13,10 +13,9 @@ EXPIRATION = 300
 
 @pytest_asyncio.fixture
 async def mock_db(mocker):
-    mocker.patch("api.db.create_async_engine", autospec=True)
-    mock_sessionmaker = mocker.patch("api.db.async_sessionmaker", autospec=True)
     mock_session = AsyncMock()
-    mock_sessionmaker.return_value = AsyncMock(return_value=mock_session)
+    mocker.patch("api.db.create_async_engine", autospec=True)
+    mocker.patch("api.db.async_sessionmaker", autospec=True, return_value=MagicMock(return_value=mock_session))
     db = DataBase()
     async with db as db_instance:
         yield db_instance, mock_session
@@ -83,7 +82,7 @@ async def test_get_expiration_hit(mocker, mock_db):
     dt.now.return_value = DATETIME2
     result = await db.get_expiration(SHORT_URL)
     assert result == (EXPIRATION + DATETIME1.time().hour) - DATETIME2.time().hour
-    mock_session.execute.assert_awaited_once
+    mock_session.execute.assert_awaited_once()
 
 
 @pytest.mark.asyncio
@@ -99,6 +98,6 @@ async def test_get_expiration_miss(mock_db):
 async def test_get_expiration_exception(mock_db):
     db, mock_session = mock_db
     mock_session.execute.side_effect = Exception("Database error")
-    result = await db.get_long_url("short_url_with_exception")
+    result = await db.get_expiration("short_url_with_exception")
     assert result is None
     mock_session.execute.assert_awaited_once()
