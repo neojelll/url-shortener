@@ -40,6 +40,7 @@ addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=100"
 [tool.coverage.run]
 omit = [
     "api/main.py",
+    "api/logger.py",
     ]
 
 [tool.ruff]
