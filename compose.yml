@@ -1,6 +1,6 @@
 services:
   api:
-    image: ghcr.io/neojelll/url-shortener-api:0.1.11
+    image: ghcr.io/neojelll/url-shortener-api:0.1.12
     ports:
       - "8000:8000"
     environment:
@@ -10,8 +10,8 @@ services:
       BROKER_HOST: "kafka"
       BROKER_PORT: "9092"
       DB_USERNAME: "neojelll"
-      DB_HOST: "5432"
-      DB_PORT: "postgres"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
       DB_NAME: "mydatabase"
       DB_PASSWORD: "123"
     depends_on:
@@ -22,8 +22,26 @@ services:
   expiration-manager:
     image: ghcr.io/neojelll/url-shortener-expiration-manager:0.1.14
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+
   kafka:
-    image: bashj79/kafka-kraft:latest
+    image: confluentinc/cp-kafka:latest
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9094
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+    ports:
+      - "9092:9092"
+      - "9094:9094"
+    depends_on:
+      - zookeeper
 
   redis:
     image: redis:latest
@@ -34,3 +52,5 @@ services:
       POSTGRES_USER: "neojelll"
       POSTGRES_DB: "mydatabase"
       POSTGRES_PASSWORD: "123"
+    volumes:
+      - ./initdb.d:/docker-entrypoint-initdb.d
