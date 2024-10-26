@@ -1,33 +1,19 @@
+from .logger import configure_logger
 from loguru import logger
-import sys
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 
-from .message_broker import MessageBroker  # type: ignore
-from .db import DataBase  # type: ignore
-from .cache import Cache  # type: ignore
+from .message_broker import MessageBroker
+from .db import DataBase
+from .cache import Cache
 
 from urllib.parse import urlparse
 from pydantic import BaseModel
 import uuid
 
 
-logger.remove()
-
-
-logger.add(
-    sys.stderr,
-    format="{time:YYYY-MM-DD at HH:mm:ss} <level>{level}</level> <red>{name}</red>: <red>{function}</red>({line}) - <cyan>{message}</cyan>",
-    level="DEBUG",
-)
-
-
-logger.add(
-    "api.log",
-    format="{time:YYYY-MM-DD at HH:mm:ss} {level} {name}: {function}({line}) - {message}",
-    level="DEBUG",
-)
+configure_logger()
 
 
 def is_valid_url(url: str) -> bool:
