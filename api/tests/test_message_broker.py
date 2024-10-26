@@ -1,15 +1,19 @@
 from api.message_broker import MessageBroker
 from unittest.mock import AsyncMock, patch
+from api.api import ShortURLRequest
 import pytest_asyncio
 import pytest
 
-TOPIC = "test_topic"
-DATA = {"url": "http://github.com/long"}
+
+DATA = ShortURLRequest(url="http://shortener.com", prefix="short", expiration=24)
 
 
 @pytest_asyncio.fixture
 async def mock_broker(mocker):
-    with patch.dict("os.environ", {"BROKER_HOST": "kafka", "BROKER_PORT": "9092"}):
+    with patch.dict(
+        "os.environ",
+        {"BROKER_HOST": "kafka", "BROKER_PORT": "9092", "TOPIC": "my_topic"},
+    ):
         mock_producer = AsyncMock()
         mocker.patch(
             "api.message_broker.AIOKafkaProducer",
@@ -36,5 +40,7 @@ async def test_aenter(mock_broker):
 @pytest.mark.asyncio
 async def test_send_data(mock_broker):
     broker, mock_producer = mock_broker
-    await broker.send_data(TOPIC, DATA)
-    mock_producer.send_and_wait.assert_awaited_once_with(TOPIC, DATA)
+    await broker.send_data(DATA)  # Здесь передаем объект
+
+    # Проверяем, что send_and_wait был вызван с правильными аргументами
+    mock_producer.send_and_wait.assert_awaited_once_with("my_topic", DATA.model_dump())

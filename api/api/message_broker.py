@@ -19,9 +19,9 @@ class MessageBroker(object):
         await self.producer.start()
         return self
 
-    async def send_data(self, topic: str, data):
+    async def send_data(self, data):
         logger.debug(f"Send data to message-broker... params: {repr(data)}")
-        await self.producer.send_and_wait(topic, data)
+        await self.producer.send_and_wait(os.environ["TOPIC"], data.model_dump())
 
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.producer.flush()
