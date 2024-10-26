@@ -26,11 +26,12 @@ async def test_ttl_error(mocker):
 
 @pytest_asyncio.fixture
 async def mock_cache(mocker):
-    mock_session = AsyncMock()
-    mocker.patch("api.cache.Redis", autospec=True, return_value=mock_session)
-    cache = Cache()
-    async with cache as instance_cache:
-        yield mock_session, instance_cache
+    with patch.dict("os.environ", {"CACHE_HOST": "redis"}):
+        mock_session = AsyncMock()
+        mocker.patch("api.cache.Redis", autospec=True, return_value=mock_session)
+        cache = Cache()
+        async with cache as instance_cache:
+            yield mock_session, instance_cache
 
 
 @pytest.mark.asyncio
