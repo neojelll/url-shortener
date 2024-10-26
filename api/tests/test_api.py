@@ -67,8 +67,8 @@ async def test_post_correct_url(mock_broker, client, data, error, in_json):
     response = client.post("/v1/url/shorten", json=data)
     assert response.status_code == error
     assert in_json in response.json()
-    await mock_broker_instance.send_data("topic_name", data)
-    mock_broker_instance.send_data.assert_awaited_with("topic_name", data)
+    await mock_broker_instance.send_data(data)
+    mock_broker_instance.send_data.assert_awaited_with(data)
 
 
 @pytest.mark.asyncio
