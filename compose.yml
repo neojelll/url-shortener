@@ -1,8 +1,10 @@
 services:
   api:
-    image: ghcr.io/neojelll/url-shortener-api:0.1.4
+    image: ghcr.io/neojelll/url-shortener-api:0.1.11
     ports:
       - "8000:8000"
+    depends_on:
+      - redis
   
   expiration-manager:
     image: ghcr.io/neojelll/url-shortener-expiration-manager:0.1.14
