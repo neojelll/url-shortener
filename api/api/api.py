@@ -46,7 +46,7 @@ async def post_url(data: ShortURLRequest):
     returned_value = {"task": str(task_num)}
 
     async with MessageBroker() as broker:
-        await broker.send_data("my_topic", data)
+        await broker.send_data(data)
 
     logger.debug(f"Post request completed. returned: {repr(returned_value)}")
     return returned_value
