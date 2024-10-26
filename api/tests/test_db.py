@@ -15,7 +15,11 @@ EXPIRATION = 300
 async def mock_db(mocker):
     mock_session = AsyncMock()
     mocker.patch("api.db.create_async_engine", autospec=True)
-    mocker.patch("api.db.async_sessionmaker", autospec=True, return_value=MagicMock(return_value=mock_session))
+    mocker.patch(
+        "api.db.async_sessionmaker",
+        autospec=True,
+        return_value=MagicMock(return_value=mock_session),
+    )
     db = DataBase()
     async with db as db_instance:
         yield db_instance, mock_session
