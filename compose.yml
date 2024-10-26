@@ -21,7 +21,15 @@ services:
       - kafka
   
   expiration-manager:
-    image: ghcr.io/neojelll/url-shortener-expiration-manager:0.1.14
+    image: ghcr.io/neojelll/url-shortener-expiration-manager:0.1.15
+    environment:
+      DB_USERNAME: "neojelll"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_NAME: "mydatabase"
+      DB_PASSWORD: "123"
+    depends_on:
+      - postgres
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
