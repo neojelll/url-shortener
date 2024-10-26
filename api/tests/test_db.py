@@ -20,6 +20,7 @@ async def mock_db(mocker):
             "DB_NAME": "mydatabase",
             "DB_USERNAME": "neojelll",
             "DB_PASSWORD": "123",
+            "DB_PORT": "5432",
         },
     ):
         mock_session = AsyncMock()

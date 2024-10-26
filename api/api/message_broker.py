@@ -11,7 +11,7 @@ configure_logger()
 class MessageBroker(object):
     def __init__(self):
         self.producer = AIOKafkaProducer(
-            bootstrap_servers=f"{os.environ["BROKER_HOST"]}:9092",
+            bootstrap_servers=f"{os.environ["BROKER_HOST"]}:{os.environ["BROKER_PORT"]}",
             value_serializer=lambda x: json.dumps(x).encode("utf-8"),
         )
 

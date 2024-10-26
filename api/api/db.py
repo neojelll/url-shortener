@@ -44,7 +44,7 @@ class UrlMapping(Base):
 
 class DataBase:
     def __init__(self):
-        database_url = f"postgresql+asyncpg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:5432/{os.environ["DB_NAME"]}"
+        database_url = f"postgresql+asyncpg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME"]}"
         self.async_engine = create_async_engine(database_url, echo=True, future=True)
         self.async_session = async_sessionmaker(
             bind=self.async_engine, class_=AsyncSession, expire_on_commit=False

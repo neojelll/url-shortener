@@ -19,7 +19,9 @@ async def ttl():
 class Cache:
     def __init__(self):
         self.cache = Redis(
-            host=os.environ["CACHE_HOST"], port=6379, decode_responses=True
+            host=os.environ["CACHE_HOST"],
+            port=int(os.environ["CACHE_PORT"]),
+            decode_responses=True,
         )
 
     async def __aenter__(self):

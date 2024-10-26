@@ -9,7 +9,7 @@ DATA = {"url": "http://github.com/long"}
 
 @pytest_asyncio.fixture
 async def mock_broker(mocker):
-    with patch.dict("os.environ", {"BROKER_HOST": "kafka"}):
+    with patch.dict("os.environ", {"BROKER_HOST": "kafka", "BROKER_PORT": "9092"}):
         mock_producer = AsyncMock()
         mocker.patch(
             "api.message_broker.AIOKafkaProducer",
