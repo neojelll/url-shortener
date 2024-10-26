@@ -1,5 +1,5 @@
-from unittest.mock import AsyncMock
 from api.message_broker import MessageBroker
+from unittest.mock import AsyncMock
 import pytest_asyncio
 import pytest
 
@@ -11,7 +11,7 @@ DATA = {"url": "http://github.com/long"}
 async def mock_broker(mocker):
     mock_producer = AsyncMock()
     mocker.patch(
-        "api.message_broker.KafkaProducer", autospec=True, return_value=mock_producer
+        "api.message_broker.AIOKafkaProducer", autospec=True, return_value=mock_producer
     )
     broker = MessageBroker()
     async with broker as broker_instance:
@@ -34,4 +34,4 @@ async def test_aenter(mock_broker):
 async def test_send_data(mock_broker):
     broker, mock_producer = mock_broker
     await broker.send_data(TOPIC, DATA)
-    mock_producer.send.assert_awaited_once_with(TOPIC, DATA)
+    mock_producer.send_and_wait.assert_awaited_once_with(TOPIC, DATA)

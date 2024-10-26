@@ -8,13 +8,18 @@ from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase
 from sqlalchemy import select
 from datetime import datetime
+from .logger import configure_logger
 from loguru import logger
 
-USERNAME = "your_username"
-PASSWORD = "your_password"
-HOST = "remote_host_address"
+
+configure_logger()
+
+
+USERNAME = "neojelll"
+PASSWORD = 123
+HOST = "localhost"
 PORT = "5432"
-DATABASE = "your_database_name"
+DATABASE = "mydatabase"
 
 DATABASE_URL = f"postgresql+asyncpg://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
@@ -47,13 +52,13 @@ class UrlMapping(Base):
 
 class DataBase:
     def __init__(self):
-        self.engine = create_async_engine(DATABASE_URL, echo=True, future=True)
-        self.async_sessionmaker = async_sessionmaker(
-            bind=self.engine, class_=AsyncSession, expire_on_commit=False
+        self.async_engine = create_async_engine(DATABASE_URL, echo=True, future=True)
+        self.async_session = async_sessionmaker(
+            bind=self.async_engine, class_=AsyncSession, expire_on_commit=False
         )
 
     async def __aenter__(self):
-        self.session = await self.async_sessionmaker()  # type: ignore
+        self.session = self.async_session()
         return self
 
     async def get_long_url(self, short_value):
