@@ -12,7 +12,11 @@ DATA = ShortURLRequest(url="http://shortener.com", prefix="short", expiration=24
 async def mock_broker(mocker):
     with patch.dict(
         "os.environ",
-        {"BROKER_HOST": "kafka", "BROKER_PORT": "9092", "SHORTENER_TOPIC_NAME": "my_topic"},
+        {
+            "BROKER_HOST": "kafka",
+            "BROKER_PORT": "9092",
+            "SHORTENER_TOPIC_NAME": "my_topic",
+        },
     ):
         mock_producer = AsyncMock()
         mocker.patch(
