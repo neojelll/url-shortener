@@ -40,7 +40,5 @@ async def test_aenter(mock_broker):
 @pytest.mark.asyncio
 async def test_send_data(mock_broker):
     broker, mock_producer = mock_broker
-    await broker.send_data(DATA)  # Здесь передаем объект
-
-    # Проверяем, что send_and_wait был вызван с правильными аргументами
+    await broker.send_data(DATA)
     mock_producer.send_and_wait.assert_awaited_once_with("my_topic", DATA.model_dump())
