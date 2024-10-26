@@ -12,7 +12,9 @@ async def mock_broker(mocker):
     with patch.dict("os.environ", {"BROKER_HOST": "kafka"}):
         mock_producer = AsyncMock()
         mocker.patch(
-            "api.message_broker.AIOKafkaProducer", autospec=True, return_value=mock_producer
+            "api.message_broker.AIOKafkaProducer",
+            autospec=True,
+            return_value=mock_producer,
         )
         broker = MessageBroker()
         async with broker as broker_instance:

@@ -1,6 +1,6 @@
 import pytest
 import pytest_asyncio
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 from api.db import DataBase, LongUrl, UrlMapping
 from datetime import datetime
 
@@ -13,16 +13,25 @@ EXPIRATION = 300
 
 @pytest_asyncio.fixture
 async def mock_db(mocker):
-    mock_session = AsyncMock()
-    mocker.patch("api.db.create_async_engine", autospec=True)
-    mocker.patch(
-        "api.db.async_sessionmaker",
-        autospec=True,
-        return_value=MagicMock(return_value=mock_session),
-    )
-    db = DataBase()
-    async with db as db_instance:
-        yield db_instance, mock_session
+    with patch.dict(
+        "os.environ",
+        {
+            "DB_HOST": "postgres",
+            "DB_NAME": "mydatabase",
+            "DB_USERNAME": "neojelll",
+            "DB_PASSWORD": "123",
+        },
+    ):
+        mock_session = AsyncMock()
+        mocker.patch("api.db.create_async_engine", autospec=True)
+        mocker.patch(
+            "api.db.async_sessionmaker",
+            autospec=True,
+            return_value=MagicMock(return_value=mock_session),
+        )
+        db = DataBase()
+        async with db as db_instance:
+            yield db_instance, mock_session
 
 
 def setup_execute1_result(mock_session, return_value):
