@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase
-from sqlalchemy import delete, func
+from sqlalchemy import delete, func, text
 from .logger import configure_logger
 from loguru import logger
 import os
@@ -58,7 +58,7 @@ class DataBase:
             result = await self.session.execute(
                 delete(UrlMapping).where(
                     UrlMapping.date
-                    <= func.now() - func.interval(f"{UrlMapping.expiration} hours")
+                    <= func.now() - text(f"INTERVAL '{UrlMapping.expiration} hours'")
                 )
             )
             await self.session.commit()
