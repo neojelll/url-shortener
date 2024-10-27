@@ -10,16 +10,10 @@ from sqlalchemy.future import select
 from sqlalchemy import func
 from .logger import configure_logger
 from loguru import logger
+import os
+
 
 configure_logger()
-
-USERNAME = "your_username"
-PASSWORD = "your_password"
-HOST = "remote_host_address"
-PORT = "5432"
-DATABASE = "your_database_name"
-
-DATABASE_URL = f"postgresql+asyncpg://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -50,7 +44,8 @@ class UrlMapping(Base):
 
 class DataBase:
     def __init__(self):
-        self.async_engine = create_async_engine(DATABASE_URL, echo=True, future=True)
+        database_url = f"postgresql+asyncpg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME"]}"
+        self.async_engine = create_async_engine(database_url, echo=True, future=True)
         self.async_session = async_sessionmaker(
             bind=self.async_engine, class_=AsyncSession, expire_on_commit=False
         )
