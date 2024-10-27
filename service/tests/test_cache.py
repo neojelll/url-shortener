@@ -1,4 +1,4 @@
-from url_shortener_service.cache import Cache, ttl
+from service.cache import Cache, ttl
 from unittest.mock import AsyncMock, patch
 import pytest_asyncio
 import pytest
@@ -13,9 +13,9 @@ TTL = "5000"
 @pytest_asyncio.fixture
 async def mock_cache(mocker):
     with patch.dict("os.environ", {"CACHE_HOST": "redis", "CACHE_PORT": "6379"}):
-        mocker.patch("url_shortener_service.cache.min")
-        mocker.patch("url_shortener_service.cache.ttl", autospec=True)
-        mock_redis = mocker.patch("url_shortener_service.cache.Redis", autospec=True)
+        mocker.patch("service.cache.min")
+        mocker.patch("service.cache.ttl", autospec=True)
+        mock_redis = mocker.patch("service.cache.Redis", autospec=True)
         mock_session = AsyncMock()
         mock_redis.return_value = mock_session
         cache = Cache()

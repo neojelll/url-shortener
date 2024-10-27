@@ -1,7 +1,7 @@
 import pytest
 import pytest_asyncio
 from unittest.mock import AsyncMock, patch
-from url_shortener_service.message_broker import MessageBroker
+from service.message_broker import MessageBroker
 
 
 @pytest_asyncio.fixture
@@ -16,7 +16,7 @@ async def mock_broker(mocker):
     ):
         mock_consumer = AsyncMock()
         mocker.patch(
-            "url_shortener_service.message_broker.AIOKafkaConsumer",
+            "service.message_broker.AIOKafkaConsumer",
             return_value=mock_consumer,
         )
         return mock_consumer

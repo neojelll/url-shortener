@@ -1,7 +1,7 @@
 import pytest
 import pytest_asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
-from url_shortener_service.db import DataBase
+from service.db import DataBase
 
 
 SHORT_URL = "shortener.com"
@@ -21,9 +21,9 @@ async def mock_db(mocker):
             "DB_PORT": "5432",
         },
     ):
-        mocker.patch("url_shortener_service.db.create_async_engine", autospec=True)
+        mocker.patch("service.db.create_async_engine", autospec=True)
         mock_sessionmaker = mocker.patch(
-            "url_shortener_service.db.async_sessionmaker", autospec=True
+            "service.db.async_sessionmaker", autospec=True
         )
         mock_session = AsyncMock()
         mock_sessionmaker.return_value = MagicMock(return_value=mock_session)
