@@ -1,6 +1,7 @@
 from aiokafka import AIOKafkaConsumer
 from .logger import configure_logger
 from loguru import logger
+import os
 
 
 configure_logger()
@@ -9,7 +10,9 @@ configure_logger()
 class MessageBroker:
     def __init__(self):
         self.consumer = AIOKafkaConsumer(
-            "my_topic", bootstrap_servers="localhost:9092", group_id="group_1"
+            os.environ["SHORTENER_TOPIC_NAME"],
+            bootstrap_servers=f"{os.environ["BROKER_HOST"]}:{os.environ["BROKER_PORT"]}",
+            group_id="group_1",
         )
 
     async def __aenter__(self):
