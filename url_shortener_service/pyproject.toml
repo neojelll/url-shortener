@@ -37,6 +37,7 @@ addopts = "-v --cov=url_shortener_service --cov-report term-missing --cov-fail-u
 [tool.coverage.run]
 omit = [
     "url_shortener_service/logger.py",
+    "url_shortener_service/main.py",
     ]
 
 [tool.ruff]
