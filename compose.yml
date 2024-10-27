@@ -21,7 +21,7 @@ services:
       - kafka
   
   expiration-manager:
-    image: ghcr.io/neojelll/url-shortener-expiration-manager:0.1.16
+    image: ghcr.io/neojelll/url-shortener-expiration-manager:0.1.17
     environment:
       DB_USERNAME: "neojelll"
       DB_HOST: "postgres"
