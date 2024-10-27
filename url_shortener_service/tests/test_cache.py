@@ -1,5 +1,5 @@
 from url_shortener_service.cache import Cache, ttl
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch
 import pytest_asyncio
 import pytest
 
@@ -7,23 +7,34 @@ import pytest
 SHORT_URL = "shortener.com"
 LONG_URL = "http://url_shortener.com"
 EXPIRATION = 5
+TTL = "5000"
 
 
 @pytest_asyncio.fixture
 async def mock_cache(mocker):
-    mocker.patch("url_shortener_service.cache.min")
-    mocker.patch("url_shortener_service.cache.ttl", autospec=True)
-    mock_redis = mocker.patch("url_shortener_service.cache.Redis", autospec=True)
-    mock_session = AsyncMock()
-    mock_redis.return_value = mock_session
-    cache = Cache()
-    async with cache as cache_instance:
-        yield cache_instance, mock_session
+    with patch.dict("os.environ", {"CACHE_HOST": "redis", "CACHE_PORT": "6379"}):
+        mocker.patch("url_shortener_service.cache.min")
+        mocker.patch("url_shortener_service.cache.ttl", autospec=True)
+        mock_redis = mocker.patch("url_shortener_service.cache.Redis", autospec=True)
+        mock_session = AsyncMock()
+        mock_redis.return_value = mock_session
+        cache = Cache()
+        async with cache as cache_instance:
+            yield cache_instance, mock_session
 
 
-def test_ttl(mocker):
-    mocker.patch("url_shortener_service.cache.os", autospec=True)
-    ttl()
+@pytest.mark.asyncio
+async def test_ttl():
+    with patch.dict("os.environ", {"CACHE_TTL": TTL}):
+        result = await ttl()
+        assert result == int(TTL)
+
+
+@pytest.mark.asyncio
+async def test_ttl_error(mocker):
+    with patch.dict("os.environ", {"CACHE_TTL": "invalid value"}):
+        result = await ttl()
+        assert result == 3600
 
 
 @pytest.mark.asyncio

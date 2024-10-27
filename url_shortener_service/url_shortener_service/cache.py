@@ -7,21 +7,29 @@ import os
 configure_logger()
 
 
-def ttl():
-    result = os.environ["CACHE_TTL"]
-    return int(result)
+async def ttl():
+    try:
+        result = os.environ["CACHE_TTL"]
+        return int(result)
+    except Exception as e:
+        logger.warning(f"CACHE_TTL environment variable error: {e}")
+        return 3600
 
 
 class Cache:
     def __init__(self):
-        self.session = Redis(host="localhost", port=6379, db=0, decode_responses=True)
+        self.session = Redis(
+            host=os.environ["CACHE_HOST"],
+            port=int(os.environ["CACHE_PORT"]),
+            decode_responses=True,
+        )
 
     async def __aenter__(self):
         return self
 
     async def create_recording(self, short_url, long_url, expiration):
         try:
-            ttl_value = min(expiration // 3600, ttl())
+            ttl_value = min(expiration // 3600, await ttl())
             await self.session.set(short_url, long_url, ex=ttl_value)
             logger.info("write successfully to cache")
         except Exception as e:
