@@ -1,4 +1,4 @@
-from url_shortener_service.shortener_service import (
+from service.shortener_service import (
     generate_random_string,
     shortener,
     check_short_url,
@@ -23,7 +23,7 @@ async def test_generate_random_string(mocker):
 )
 async def test_shortener(mocker, expected, prefix, random_string_returned):
     mocker.patch(
-        "url_shortener_service.shortener_service.generate_random_string",
+        "service.shortener_service.generate_random_string",
         autospec=True,
         return_value=random_string_returned,
     )
@@ -42,7 +42,7 @@ async def test_shortener(mocker, expected, prefix, random_string_returned):
 )
 async def test_check_short_url(mocker, expected, return_cache, return_db):
     mocker.patch(
-        "url_shortener_service.shortener_service.shortener",
+        "service.shortener_service.shortener",
         autospec=True,
         side_effect=["http://localhost/abc1", "http://localhost/abc2"],
     )
@@ -50,7 +50,7 @@ async def test_check_short_url(mocker, expected, return_cache, return_db):
     mock_cache.check_short_url.return_value = return_cache
     mock_cache.__aenter__.return_value = mock_cache
     mocker.patch(
-        "url_shortener_service.shortener_service.Cache",
+        "service.shortener_service.Cache",
         autospec=True,
         return_value=mock_cache,
     )
@@ -59,7 +59,7 @@ async def test_check_short_url(mocker, expected, return_cache, return_db):
     mock_db.check_short_url.return_value = return_db
     mock_db.__aenter__.return_value = mock_db
     mocker.patch(
-        "url_shortener_service.shortener_service.DataBase",
+        "service.shortener_service.DataBase",
         autospec=True,
         return_value=mock_db,
     )
