@@ -41,7 +41,9 @@ class Cache:
 
     async def set(self, short_url, long_url, expiration) -> None:
         try:
-            logger.debug(f"Start cache set func with: {short_url, long_url, min(await ttl(), expiration)}")
+            logger.debug(
+                f"Start cache set func with: {short_url, long_url, min(await ttl(), expiration)}"
+            )
             await self.cache.set(short_url, long_url, ex=min(await ttl(), expiration))
             logger.debug("set to cache sucsessfully")
         except Exception as e:

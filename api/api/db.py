@@ -65,7 +65,9 @@ class DataBase:
             )
             long_url = result.scalars().first()
             if long_url is not None:
-                logger.debug(f"long_url is not None return value: {long_url.long_value}")
+                logger.debug(
+                    f"long_url is not None return value: {long_url.long_value}"
+                )
                 return long_url.long_value
             logger.debug("long_url is None return value: None")
             return None
