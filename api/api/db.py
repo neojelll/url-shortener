@@ -56,6 +56,7 @@ class DataBase:
 
     async def get_long_url(self, short_value):
         try:
+            logger.debug(f"Start select a long_url from a short_url: {short_value}")
             result = await self.session.execute(
                 select(LongUrl)
                 .join(UrlMapping)
@@ -64,7 +65,9 @@ class DataBase:
             )
             long_url = result.scalars().first()
             if long_url is not None:
+                logger.debug(f"long_url is not None return value: {long_url.long_value}")
                 return long_url.long_value
+            logger.debug("long_url is None return value: None")
             return None
         except Exception as e:
             logger.error(f"An error occurred while fetching long URL: {e}")
@@ -72,6 +75,7 @@ class DataBase:
 
     async def get_expiration(self, short_value):
         try:
+            logger.debug(f"Start select a expiration from a short_url: {short_value}")
             result = await self.session.execute(
                 select(UrlMapping)
                 .join(ShortUrl)
@@ -82,7 +86,10 @@ class DataBase:
                 expiration, date = url_mapping.expiration, url_mapping.date
                 create_time = date.hour
                 current_time = datetime.now().time().hour
-                return max(int((create_time + expiration) - current_time), 0)
+                returned_value = max(int((create_time + expiration) - current_time), 0)
+                logger.debug(f"expiration is not None return value: {returned_value}")
+                return returned_value
+            logger.debug("expiration is None return value: None")
             return None
         except Exception as e:
             logger.error(f"An error occurred while fetching long URL: {e}")
