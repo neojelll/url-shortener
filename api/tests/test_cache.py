@@ -55,6 +55,14 @@ async def test_check(mock_cache):
 
 
 @pytest.mark.asyncio
+async def test_check_error(mock_cache):
+    mock_session, cache = mock_cache
+    mock_session.get.side_effect = Exception("Cache Error")
+    result = await cache.check(SHORT_URL)
+    assert result is None
+
+
+@pytest.mark.asyncio
 async def test_set(mock_cache):
     mock_session, cache = mock_cache
     mock_session.set = AsyncMock()

@@ -20,10 +20,15 @@ class MessageBroker(object):
         return self
 
     async def send_data(self, data):
-        logger.debug(f"Send data to message-broker... params: {repr(data)}")
-        await self.producer.send_and_wait(
-            os.environ["SHORTENER_TOPIC_NAME"], data.model_dump()
-        )
+        try:
+            logger.debug(f"Send data to message-broker... params: {repr(data)}")
+            await self.producer.send_and_wait(
+                os.environ["SHORTENER_TOPIC_NAME"], data.model_dump()
+            )
+            logger.debug(f"data sent to broker successfully: {data.model_dump()}")
+        except Exception as e:
+            logger.debug(f"Error when send data to broker: {e}")
+            return None
 
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.producer.flush()
