@@ -17,8 +17,8 @@ async def test_generate_random_string(mocker):
 @pytest.mark.parametrize(
     "expected, prefix, random_string_returned",
     [
-        ("http://localhost/prefix/abc1", "prefix", "abc1"),
-        ("http://localhost/abcd123", "", "abcd123"),
+        ("prefix/abc1", "prefix", "abc1"),
+        ("abcd123", "", "abcd123"),
     ],
 )
 async def test_shortener(mocker, expected, prefix, random_string_returned):
@@ -35,16 +35,16 @@ async def test_shortener(mocker, expected, prefix, random_string_returned):
 @pytest.mark.parametrize(
     "expected, return_cache, return_db",
     [
-        ("http://localhost/abc1", False, None),
-        ("http://localhost/abc2", True, None),
-        ("http://localhost/abc2", False, "http://localhost/abc1"),
+        ("abc1", False, None),
+        ("abc2", True, None),
+        ("abc2", False, "abc1"),
     ],
 )
 async def test_check_short_url(mocker, expected, return_cache, return_db):
     mocker.patch(
         "service.shortener_service.shortener",
         autospec=True,
-        side_effect=["http://localhost/abc1", "http://localhost/abc2"],
+        side_effect=["abc1", "abc2"],
     )
     mock_cache = AsyncMock()
     mock_cache.check_short_url.return_value = return_cache
