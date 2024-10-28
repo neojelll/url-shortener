@@ -20,10 +20,10 @@ async def generate_random_string(length=7):
 async def shortener(prefix: str) -> str:
     if prefix:
         random_string = await generate_random_string(4)
-        short_url = f"http://localhost/{prefix}/{random_string}"
+        short_url = f"{prefix}/{random_string}"
     else:
         random_string = await generate_random_string(7)
-        short_url = f"http://localhost/{random_string}"
+        short_url = random_string
     logger.debug(f"create short_url completed return value: {short_url}")
     return short_url
 
