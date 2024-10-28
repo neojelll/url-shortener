@@ -32,7 +32,7 @@ services:
       - postgres
 
   url-shortener:
-    image: ghcr.io/neojelll/url-shortener-service:0.1.4
+    image: ghcr.io/neojelll/url-shortener-service:0.1.5
     environment:
       CACHE_TTL: "3600"
       CACHE_HOST: "redis"
