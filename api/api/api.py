@@ -46,6 +46,7 @@ async def post_url(data: ShortURLRequest):
     returned_value = {"task": str(task_num)}
 
     async with MessageBroker() as broker:
+        logger.debug(f"Start send_data to kafka: {repr(data)}")
         await broker.send_data(data)
 
     logger.debug(f"Post request completed. returned: {repr(returned_value)}")
@@ -54,22 +55,33 @@ async def post_url(data: ShortURLRequest):
 
 @app.get("/v1/url/shorten")
 async def get_request(short_url):
+    logger.debug(f"Start get request... params: {short_url}")
     async with Cache() as cache:
+        logger.debug(f"Start cache check func with: {short_url}")
         check = await cache.check(short_url)
 
         if check is not None:
+            logger.debug("Cache is not None")
             long_url = check
         else:
+            logger.debug("Cache is None")
             async with DataBase() as database:
+                logger.debug(f"Start db get_long_url func with: {short_url}")
                 long_url = await database.get_long_url(short_url)
+                logger.debug(f"Start db get_expiration func with: {short_url}")
                 expiration = await database.get_expiration(short_url)
 
             if long_url is None or expiration is None:
+                logger.debug("long_url or expiration is None")
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND, detail="URL is not found"
                 )
+            logger.debug("long_url or expiration is not None")
+            logger.debug(f"Start cache set func with: {long_url}, {expiration}")
             await cache.set(short_url, long_url, expiration)
-    return {"long_url": f"{long_url}"}
+    returned_value = {"long_url": f"{long_url}"}
+    logger.debug(f"get request completed. returned: {repr(returned_value)}")
+    return returned_value
 
 
 @app.get("/{short_url}")
@@ -77,19 +89,26 @@ async def redirect_request(short_url: str):
     logger.debug(f"Start redirect response... params: {repr(short_url)}")
 
     async with Cache() as cache:
+        logger.debug(f"Start cache check func with: {short_url}")
         check = await cache.check(short_url)
 
         if check is not None:
+            logger.debug("Cache is not None")
             long_url = check
         else:
             async with DataBase() as database:
+                logger.debug(f"Start db get_long_url func with: {short_url}")
                 long_url = await database.get_long_url(short_url)
+                logger.debug(f"Start db get_expiration func with: {short_url}")
                 expiration = await database.get_expiration(short_url)
 
             if long_url is None or expiration is None:
+                logger.debug("long_url or expiration is None")
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND, detail="URL is not valid"
                 )
+            logger.debug("long_url or expiration is not None")
+            logger.debug(f"Start cache set func with: {long_url}, {expiration}")
             await cache.set(short_url, long_url, expiration)
 
     logger.debug(f"Redirect response completed. returned: Redirect to {repr(long_url)}")
