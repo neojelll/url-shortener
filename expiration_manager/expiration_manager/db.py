@@ -56,9 +56,7 @@ class DataBase:
     async def delete_after_time(self):
         try:
             result = await self.session.execute(
-                delete(UrlMapping).where(
-                    UrlMapping.date
-                    <= func.now() - text(f"INTERVAL '{UrlMapping.expiration} hours'")
+                delete(UrlMapping).where(func.now() > (UrlMapping.date + (func.interval(UrlMapping.expiration * 3600)))
                 )
             )
             await self.session.commit()
