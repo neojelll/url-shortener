@@ -11,7 +11,7 @@ class MessageBroker:
     def __init__(self):
         self.consumer = AIOKafkaConsumer(
             os.environ["SHORTENER_TOPIC_NAME"],
-            bootstrap_servers=f"{os.environ["BROKER_HOST"]}:{os.environ["BROKER_PORT"]}",
+            bootstrap_servers=f"{os.environ['BROKER_HOST']}:{os.environ['BROKER_PORT']}",
             group_id="group_1",
         )
 
@@ -22,7 +22,7 @@ class MessageBroker:
     async def consume_data(self):
         try:
             async for msg in self.consumer:
-                logger.debug("start cycle")
+                logger.debug("start comsume data with kafka")
                 if msg.value is not None:
                     logger.debug(f"got data from kafka: {msg.value.decode('utf-8')}")
                     yield msg.value.decode("utf-8")

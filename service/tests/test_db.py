@@ -22,9 +22,7 @@ async def mock_db(mocker):
         },
     ):
         mocker.patch("service.db.create_async_engine", autospec=True)
-        mock_sessionmaker = mocker.patch(
-            "service.db.async_sessionmaker", autospec=True
-        )
+        mock_sessionmaker = mocker.patch("service.db.async_sessionmaker", autospec=True)
         mock_session = AsyncMock()
         mock_sessionmaker.return_value = MagicMock(return_value=mock_session)
         db = DataBase()

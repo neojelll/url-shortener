@@ -10,6 +10,7 @@ configure_logger()
 async def ttl():
     try:
         result = os.environ["CACHE_TTL"]
+        logger.debug("successfully obtained the value of the environment variable")
         return int(result)
     except Exception as e:
         logger.warning(f"CACHE_TTL environment variable error: {e}")
@@ -30,6 +31,7 @@ class Cache:
     async def create_recording(self, short_url, long_url, expiration):
         try:
             ttl_value = min(expiration // 3600, await ttl())
+            logger.debug(f"Start cache set func with: {short_url, long_url, ttl_value}")
             await self.session.set(short_url, long_url, ex=ttl_value)
             logger.info("write successfully to cache")
         except Exception as e:
@@ -37,6 +39,7 @@ class Cache:
 
     async def check_short_url(self, short_url):
         try:
+            logger.debug(f"Start cache exists func with {short_url}")
             exists = await self.session.exists(short_url)
             if exists:
                 logger.info(f"Short_url '{short_url}' exists in cache")

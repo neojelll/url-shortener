@@ -56,6 +56,7 @@ class DataBase:
 
     async def create_recording(self, short_url, long_url, expiration):
         try:
+            logger.debug("add new tables in db...")
             new_long_url = LongUrl(long_value=long_url)
             new_short_url = ShortUrl(short_value=short_url)
             self.session.add(new_long_url)
@@ -83,6 +84,7 @@ class DataBase:
 
     async def check_short_url(self, short_value):
         try:
+            logger.debug(f"select a short_url from a short_url: {short_value}")
             result = await self.session.execute(
                 select(ShortUrl).where(ShortUrl.short_value == short_value)
             )
