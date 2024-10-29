@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase
-from sqlalchemy import text
+from sqlalchemy import func, select
 from .logger import configure_logger
 from loguru import logger
 import os
@@ -55,17 +55,16 @@ class DataBase:
 
     async def delete_after_time(self):
         try:
-            query = text(
-                """
-            DELETE FROM url_mapping
-            WHERE now() > (date + (expiration * interval '1 hour'))
-            RETURNING short_id
-            """
+            expired_urls_query = select(UrlMapping).filter(
+                func.now()
+                > (UrlMapping.date + (UrlMapping.expiration * func.interval("1 hour")))
             )
-            result = await self.session.execute(query)
+            result = await self.session.execute(expired_urls_query)
+            expired_urls = result.scalars().all()
+            for url in expired_urls:
+                await self.session.delete(url)
             await self.session.commit()
-            deleted_ids = result.scalars().all()
-            deleted_count = len(deleted_ids)
+            deleted_count = len(expired_urls)
             logger.info(f"Deleted {deleted_count} records with expired storage time")
             return deleted_count
         except Exception as e:
