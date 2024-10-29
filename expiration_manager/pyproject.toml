@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neojelll-url-shortener-expiration-manager"
-version = "0.1.19"
+version = "0.1.20"
 description = ""
 authors = ["neojelll <timofejmitusin60892@gmail.com>"]
 readme = "README.md"

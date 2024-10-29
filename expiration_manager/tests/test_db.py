@@ -42,11 +42,11 @@ async def test_aenter(mock_db):
 @pytest.mark.asyncio
 async def test_delete_after_time(mock_db):
     db, mock_session = mock_db
-    mock_session.execute = AsyncMock()
-    mock_session.commit = AsyncMock()
-    mock_session.execute.return_value.rowcount = 5
+    mock_session.execute = AsyncMock(return_value=MagicMock())
+    mock_all = MagicMock(return_value=[1, 2, 3])
+    mock_session.execute.return_value.scalars.return_value.all = mock_all
     result = await db.delete_after_time()
-    assert result == 5
+    assert result == 3
     mock_session.commit.assert_awaited_once()
 
 
