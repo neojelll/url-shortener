@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase
-from sqlalchemy import func, select, delete
+from sqlalchemy import func, select, delete, text
 from .logger import configure_logger
 from loguru import logger
 import os
@@ -55,22 +55,27 @@ class DataBase:
 
     async def delete_after_time(self):
         try:
-            stmt = select(UrlMapping).filter(
-                (UrlMapping.date + func.timedelta(days=UrlMapping.expiration))
-                <= func.now()
-            )
+            current_time = func.now()
 
+            stmt = select(UrlMapping).filter(
+                UrlMapping.date + (UrlMapping.expiration * text("INTERVAL '1 hour'"))
+                <= current_time
+            )
             result = await self.session.execute(stmt)
             expired_mappings = result.scalars().all()
 
-            if expired_mappings:
-                delete_stmt = delete(UrlMapping).where(
-                    (UrlMapping.date + func.timedelta(days=UrlMapping.expiration))
-                    <= func.now()
-                )
+            if not expired_mappings:
+                logger.info("No expired records found.")
+                return 0
 
-                await self.session.execute(delete_stmt)
-                await self.session.commit()
+            delete_stmt = delete(UrlMapping).where(
+                UrlMapping.date + (UrlMapping.expiration * text("INTERVAL '1 hour'"))
+                <= current_time
+            )
+            await self.session.execute(delete_stmt)
+            await self.session.commit()
+
+            logger.info(f"Deleted {len(expired_mappings)} expired records.")
 
             return expired_mappings
         except Exception as e:
