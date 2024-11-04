@@ -55,22 +55,18 @@ class DataBase:
 
     async def delete_after_time(self):
         try:
-            stmt = (
-                select(UrlMapping)
-                    .filter(
-                        (UrlMapping.date + func.timedelta(days=UrlMapping.expiration)) <= func.now()
-                    )
-                )
+            stmt = select(UrlMapping).filter(
+                (UrlMapping.date + func.timedelta(days=UrlMapping.expiration))
+                <= func.now()
+            )
 
             result = await self.session.execute(stmt)
             expired_mappings = result.scalars().all()
 
             if expired_mappings:
-                delete_stmt = (
-                    delete(UrlMapping)
-                    .where(
-                        (UrlMapping.date + func.timedelta(days=UrlMapping.expiration)) <= func.now()
-                    )
+                delete_stmt = delete(UrlMapping).where(
+                    (UrlMapping.date + func.timedelta(days=UrlMapping.expiration))
+                    <= func.now()
                 )
 
                 await self.session.execute(delete_stmt)
