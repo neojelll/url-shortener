@@ -30,7 +30,7 @@ class Cache:
 
     async def create_recording(self, short_url, long_url, expiration):
         try:
-            ttl_value = min(expiration // 3600, await ttl())
+            ttl_value = min(expiration * 3600, await ttl())
             logger.debug(f"Start cache set func with: {short_url, long_url, ttl_value}")
             await self.session.set(short_url, long_url, ex=ttl_value)
             logger.info("write successfully to cache")
