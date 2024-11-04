@@ -16,10 +16,13 @@ services:
       DB_PASSWORD: "123"
       SHORTENER_TOPIC_NAME: "main"
     depends_on:
-      - redis
-      - postgres
-      - kafka
-  
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+
   expiration-manager:
     image: ghcr.io/neojelll/url-shortener-expiration-manager:0.1.29
     environment:
@@ -29,10 +32,11 @@ services:
       DB_NAME: "mydatabase"
       DB_PASSWORD: "123"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   url-shortener:
-    image: ghcr.io/neojelll/url-shortener-service:0.1.5
+    image: ghcr.io/neojelll/url-shortener-service:0.1.7
     environment:
       CACHE_TTL: "3600"
       CACHE_HOST: "redis"
@@ -46,9 +50,12 @@ services:
       DB_PASSWORD: "123"
       SHORTENER_TOPIC_NAME: "main"
     depends_on:
-      - redis
-      - postgres
-      - kafka
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -56,6 +63,11 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
     ports:
       - "2181:2181"
+    healthcheck:
+      test: ["CMD", "echo", "test"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -71,13 +83,24 @@ services:
     ports:
       - "9092:9092"
       - "9094:9094"
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--list", "--bootstrap-server", "localhost:9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
 
   redis:
     image: redis:latest
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   postgres:
     image: postgres:latest
@@ -88,6 +111,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./initdb.d:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U neojelll"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 volumes:
   redis_data:
