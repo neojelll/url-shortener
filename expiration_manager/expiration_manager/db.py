@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase
-from sqlalchemy import func, select
+from sqlalchemy import func, select, delete
 from .logger import configure_logger
 from loguru import logger
 import os
@@ -55,18 +55,28 @@ class DataBase:
 
     async def delete_after_time(self):
         try:
-            expired_urls_query = select(UrlMapping).filter(
-                func.now()
-                > (UrlMapping.date + (UrlMapping.expiration * func.interval("1 hour")))
-            )
-            result = await self.session.execute(expired_urls_query)
-            expired_urls = result.scalars().all()
-            for url in expired_urls:
-                await self.session.delete(url)
-            await self.session.commit()
-            deleted_count = len(expired_urls)
-            logger.info(f"Deleted {deleted_count} records with expired storage time")
-            return deleted_count
+            stmt = (
+                select(UrlMapping)
+                    .filter(
+                        (UrlMapping.date + func.timedelta(days=UrlMapping.expiration)) <= func.now()
+                    )
+                )
+
+            result = await self.session.execute(stmt)
+            expired_mappings = result.scalars().all()
+
+            if expired_mappings:
+                delete_stmt = (
+                    delete(UrlMapping)
+                    .where(
+                        (UrlMapping.date + func.timedelta(days=UrlMapping.expiration)) <= func.now()
+                    )
+                )
+
+                await self.session.execute(delete_stmt)
+                await self.session.commit()
+
+            return expired_mappings
         except Exception as e:
             logger.error(f"Error when deleting records: {e}")
             await self.session.rollback()
