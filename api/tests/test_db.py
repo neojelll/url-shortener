@@ -1,7 +1,7 @@
 import pytest
 import pytest_asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
-from api.db import DataBase, LongUrl, UrlMapping
+from api.db import DataBase, LongUrl, UrlMapping, ShortUrl
 from datetime import datetime
 
 SHORT_URL = "shortener.com"
@@ -9,6 +9,7 @@ LONG_URL = "http://shortener.com/long"
 DATETIME1 = datetime(2024, 9, 27, 15, 12, 17)
 DATETIME2 = datetime(2024, 9, 27, 16, 12, 17)
 EXPIRATION = 300
+TASK_NUM = "disdsdpal129391203912"
 
 
 @pytest_asyncio.fixture
@@ -113,5 +114,30 @@ async def test_get_expiration_exception(mock_db):
     db, mock_session = mock_db
     mock_session.execute.side_effect = Exception("Database error")
     result = await db.get_expiration("short_url_with_exception")
+    assert result is None
+    mock_session.execute.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "task_num, mock_return, expected",
+    [
+        (TASK_NUM, ShortUrl(short_value=SHORT_URL), SHORT_URL),
+        ("non_existent_task_num", None, None),
+    ],
+)
+async def test_get_short_url(mock_db, task_num, mock_return, expected):
+    db, mock_session = mock_db
+    setup_execute1_result(mock_session, mock_return)
+    result = await db.get_short_url(task_num)
+    assert result == expected
+    mock_session.execute.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_get_short_url_exception(mock_db):
+    db, mock_session = mock_db
+    mock_session.execute.side_effect = Exception("Database error")
+    result = await db.get_short_url("task_num_with_exception")
     assert result is None
     mock_session.execute.assert_awaited_once()
