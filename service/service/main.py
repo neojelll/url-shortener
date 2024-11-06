@@ -1,4 +1,4 @@
-from .message_broker import MessageBroker
+from .message_broker import BrokerProducer, BrokerConsumer
 from .shortener_service import check_short_url
 from .logger import configure_logger
 from loguru import logger
@@ -12,8 +12,8 @@ configure_logger()
 
 
 async def main() -> None:
-    async with MessageBroker() as broker:
-        async for message in broker.consume_data():
+    async with BrokerConsumer() as consumer:
+        async for message in consumer.consume_data():
             logger.debug("Start cunsume data with kafka")
             data = json.loads(message)
             long_url = data["url"]
@@ -29,6 +29,9 @@ async def main() -> None:
                     f"Start db func create_recoring with: {short_url, long_url, expiration}"
                 )
                 await db.create_recording(short_url, long_url, expiration)
+            data.update({"short_url": short_url})
+            async with BrokerProducer() as producer:
+                await producer.send_data(data)
 
 
 def run() -> None:

@@ -1,7 +1,7 @@
 import pytest
 import pytest_asyncio
 from unittest.mock import AsyncMock, patch
-from service.message_broker import MessageBroker
+from service.message_broker import BrokerConsumer
 
 
 @pytest_asyncio.fixture
@@ -33,7 +33,7 @@ async def test_message_broker_init(mock_broker):
         },
     ):
         _ = mock_broker
-        broker = MessageBroker()
+        broker = BrokerConsumer()
         assert broker.consumer is not None
 
 
@@ -50,7 +50,7 @@ async def test_consume_data(mock_broker):
         mock_consumer = mock_broker
         mock_consumer.__aiter__.return_value = iter([AsyncMock(value=b"test_message")])
 
-        async with MessageBroker() as broker:
+        async with BrokerConsumer() as broker:
             messages = [msg async for msg in broker.consume_data()]
             assert messages == ["test_message"]
 
@@ -68,7 +68,7 @@ async def test_consume_data_empty_message(mock_broker):
         mock_consumer = mock_broker
         mock_consumer.__aiter__.return_value = iter([AsyncMock(value=None)])
 
-        async with MessageBroker() as broker:
+        async with BrokerConsumer() as broker:
             messages = [msg async for msg in broker.consume_data()]
             assert messages == []
 
@@ -86,6 +86,6 @@ async def test_consume_data_error_handling(mock_broker):
         mock_consumer = mock_broker
         mock_consumer.__aiter__.side_effect = Exception("Test exception")
 
-        async with MessageBroker() as broker:
+        async with BrokerConsumer() as broker:
             messages = [msg async for msg in broker.consume_data()]
             assert messages == []
