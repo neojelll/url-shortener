@@ -82,4 +82,4 @@ jobs:
           PROJECT_NAME=$(echo "${{ env.PROJECT_NAME }}" | tr '_' '-')
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io --username neojelll --password-stdin
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-$PROJECT_NAME:${{ env.VERSION }} --push .
+          docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-$PROJECT_NAME:${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-$PROJECT_NAME:latest --push .
