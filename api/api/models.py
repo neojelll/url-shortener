@@ -27,4 +27,3 @@ class UrlMapping(Base):
     long_url = relationship("LongUrl", backref="url_mappings")
     expiration = Column(Integer, nullable=False)
     date = Column(TIMESTAMP, nullable=False)
-    task_num = Column(String, nullable=False, unique=True)
