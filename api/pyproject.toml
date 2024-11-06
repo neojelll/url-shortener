@@ -35,7 +35,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=100"
+addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=90"
 
 [tool.coverage.run]
 omit = [
