@@ -4,7 +4,7 @@ from loguru import logger
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 
-from .message_broker import MessageBroker
+from .message_broker import BrokerProducer, BrokerConsumer
 from .db import DataBase
 from .cache import Cache
 
@@ -50,7 +50,7 @@ async def send_data(data: ShortURLRequest) -> dict[str, str]:
     data_dict: dict = data.model_dump()
     data_dict.update(task)
 
-    async with MessageBroker() as broker:
+    async with BrokerProducer() as broker:
         await broker.send_data(data_dict)
 
     logger.debug(f"Completed send_data, returned: {repr(task)}")
@@ -60,19 +60,12 @@ async def send_data(data: ShortURLRequest) -> dict[str, str]:
 @app.get("/v1/url/shorten")
 async def get_short_url(task_num: str) -> dict[str, str]:
     logger.debug(f"Start get_short_url, params: {task_num}")
-    async with DataBase() as database:
-        short_url = await database.get_short_url(task_num)
+    async with BrokerConsumer() as broker:
+        short_url = await broker.consume_data(task_num)
         if short_url is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="URL is not found"
             )
-
-        expiration = await database.get_expiration(short_url)
-        if expiration is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="URL is not found"
-            )
-
     return_value = {"short_url": f"{short_url}"}
     logger.debug(f"Completed get_short_url, returned: {repr(return_value)}")
     return return_value
