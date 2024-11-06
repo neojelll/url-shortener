@@ -1,4 +1,4 @@
-from api.message_broker import MessageBroker
+from api.message_broker import BrokerProducer
 from unittest.mock import AsyncMock, patch
 from api.api import ShortURLRequest
 import pytest_asyncio
@@ -24,7 +24,7 @@ async def mock_broker(mocker):
             autospec=True,
             return_value=mock_producer,
         )
-        broker = MessageBroker()
+        broker = BrokerProducer()
         async with broker as broker_instance:
             yield broker_instance, mock_producer
 
@@ -32,13 +32,13 @@ async def mock_broker(mocker):
 @pytest.mark.asyncio
 async def test_init(mock_broker):
     broker, _ = mock_broker
-    assert isinstance(broker, MessageBroker)
+    assert isinstance(broker, BrokerProducer)
 
 
 @pytest.mark.asyncio
 async def test_aenter(mock_broker):
     broker, _ = mock_broker
-    assert isinstance(broker, MessageBroker)
+    assert isinstance(broker, BrokerProducer)
 
 
 @pytest.mark.asyncio
