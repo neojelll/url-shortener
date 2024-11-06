@@ -26,21 +26,6 @@ class DataBase:
         self.session = self.async_session()
         return self
 
-    async def get_short_url(self, task: str) -> None | str:
-        try:
-            result = await self.session.execute(
-                select(ShortUrl).join(UrlMapping).where(UrlMapping.task_num == task)
-            )
-            short_url = result.scalars().first()
-
-            if short_url is not None:
-                return_value = str(short_url.short_value)
-                logger.debug(f"short_url is not None, returned: {return_value}")
-                return return_value
-            logger.debug("short_url is None, returned: None")
-        except Exception as e:
-            logger.error(f"Error when get_short_url: {e}")
-
     async def get_long_url(self, short_value: str) -> None | str:
         try:
             logger.debug(f"Start get_long_url, params: {short_value}")
