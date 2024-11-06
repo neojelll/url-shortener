@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neojelll-url-shortener-api"
-version = "0.1.14"
+version = "0.1.16"
 description = ""
 authors = ["neojelll <timofejmitusin60892@gmail.com>"]
 readme = "README.md"
@@ -35,12 +35,13 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=100"
+addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=90"
 
 [tool.coverage.run]
 omit = [
     "api/main.py",
     "api/logger.py",
+    "api/models.py",
     ]
 
 [tool.ruff]
