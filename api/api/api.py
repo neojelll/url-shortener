@@ -49,6 +49,7 @@ async def send_data(data: ShortURLRequest) -> dict[str, str]:
 
     data_dict: dict = data.model_dump()
     data_dict.update(task)
+    logger.debug(f"data_dict: {data_dict}")
 
     async with BrokerProducer() as broker:
         await broker.send_data(data_dict)
