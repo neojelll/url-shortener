@@ -1,6 +1,7 @@
 from aiokafka import AIOKafkaProducer, AIOKafkaConsumer
 from .logger import configure_logger
 from loguru import logger
+import asyncio
 import os
 import json
 
@@ -39,6 +40,7 @@ class BrokerConsumer:
             bootstrap_servers=f"{os.environ['BROKER_HOST']}:{os.environ['BROKER_PORT']}",
             enable_auto_commit=False,
             group_id="group_2",
+            auto_offset_reset="earliest",
         )
 
     async def __aenter__(self):
@@ -47,18 +49,40 @@ class BrokerConsumer:
 
     async def consume_data(self, task_num: str) -> None | str:
         try:
-            async for msg in self.consumer:
-                logger.debug("start comsume data with task_topic")
+            logger.debug("Start consuming data")
+            timeout = 20
+            start_time = asyncio.get_event_loop().time()
+            while True:
+                try:
+                    msg = await asyncio.wait_for(self.consumer.__anext__(), timeout)
+                except asyncio.TimeoutError:
+                    logger.warning("Timeout: no messages were processed.")
+                    return None
+                current_time = asyncio.get_event_loop().time()
+                if current_time - start_time > timeout:
+                    logger.warning("Timeout: no messages were processed.")
+                    return None
+                logger.debug("Start consuming data with task_topic")
                 if msg.value is not None:
                     data: dict = json.loads(msg.value.decode("utf-8"))
-                    if data["task"] == task_num:
-                        short_url = data["short_url"]
-                        await self.consumer.commit()
-                        logger.debug(f"Completed consume data returned: {short_url}")
-                        return short_url
-                logger.warning("Received a message is None value")
+                    if "task" in data and data["task"] == task_num:
+                        logger.debug("start if task")
+                        short_url = data.get("short_url")
+                        if short_url:
+                            logger.debug("start if short_url")
+                            await self.consumer.commit()
+                            logger.debug(
+                                f"Completed consuming data. Returned short_url: {short_url}"
+                            )
+                            return short_url
+                    logger.debug(
+                        f"Message received but task_num does not match: {data.get('task')}"
+                    )
+                else:
+                    logger.warning("Received a message with None value")
+                    return None
         except Exception as e:
-            logger.error(f"Error when consume data from kafka: {e}")
+            logger.error(f"Error when consuming data from kafka: {e}")
 
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.consumer.stop()
