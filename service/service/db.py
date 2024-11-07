@@ -2,10 +2,8 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
     AsyncSession,
     async_sessionmaker,
-    AsyncAttrs,
 )
-from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
-from sqlalchemy.orm import relationship, DeclarativeBase
+from .models import ShortUrl, LongUrl, UrlMapping
 from sqlalchemy.future import select
 from sqlalchemy import func
 from .logger import configure_logger
@@ -14,32 +12,6 @@ import os
 
 
 configure_logger()
-
-
-class Base(AsyncAttrs, DeclarativeBase):
-    pass
-
-
-class LongUrl(Base):
-    __tablename__ = "long_url"
-    long_id = Column(Integer, primary_key=True)
-    long_value = Column(String(250), unique=True, nullable=False)
-
-
-class ShortUrl(Base):
-    __tablename__ = "short_url"
-    short_id = Column(Integer, primary_key=True)
-    short_value = Column(String(250), nullable=False)
-
-
-class UrlMapping(Base):
-    __tablename__ = "url_mapping"
-    short_id = Column(Integer, ForeignKey("short_url.short_id"), primary_key=True)
-    long_id = Column(Integer, ForeignKey("long_url.long_id"), nullable=False)
-    expiration = Column(Integer, nullable=False)
-    date = Column(TIMESTAMP, nullable=False)
-    short_url = relationship("ShortUrl", backref="url_mappings")
-    long_url = relationship("LongUrl", backref="url_mappings")
 
 
 class DataBase:

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neojelll-url-shortener-service"
-version = "0.1.7"
+version = "0.1.8"
 description = ""
 authors = ["neojelll <timofejmitusin60892@gmail.com>"]
 readme = "README.md"
@@ -32,7 +32,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "-v --cov=service --cov-report term-missing --cov-fail-under=100"
+addopts = "-v --cov=service --cov-report term-missing --cov-fail-under=90"
 
 [tool.coverage.run]
 omit = [

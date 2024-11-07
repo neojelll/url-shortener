@@ -9,6 +9,7 @@ LONG_URL = "http://shortener.com/long"
 DATETIME1 = datetime(2024, 9, 27, 15, 12, 17)
 DATETIME2 = datetime(2024, 9, 27, 16, 12, 17)
 EXPIRATION = 300
+TASK_NUM = "disdsdpal129391203912"
 
 
 @pytest_asyncio.fixture
