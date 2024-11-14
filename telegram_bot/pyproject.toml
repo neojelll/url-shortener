@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neojelll-url-shortener-telegram-bot"
-version = "0.2.6"
+version = "0.2.17"
 description = ""
 authors = ["neojelll <timofejmitusin60892@gmail.com>"]
 readme = "README.md"
@@ -14,6 +14,7 @@ python = "^3.12"
 aiogram = "^3.14.0"
 aiohttp = "^3.10.10"
 loguru = "^0.7.2"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.4"
@@ -30,7 +31,15 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=100"
+addopts = "-v --cov=telegram_bot --cov-report term-missing --cov-fail-under=100"
+
+[tool.coverage.run]
+omit = [
+	"telegram_bot/main.py",
+	"telegram_bot/logger.py",
+	"telegram_bot/validate.py",
+	"telegram_bot/bot.py",
+]
 
 [tool.ruff]
 target-version = "py312"
@@ -39,6 +48,7 @@ fix = true
 
 [tool.ruff.format]
 indent-style = "space"
+quote-style = "single"
 
 [lint]
 ignore = ["E501"]
