@@ -2,7 +2,7 @@ from loguru import logger
 import sys
 
 
-def configure_logger():
+def configure_logger() -> None:
     logger.remove()
 
     logger.add(
