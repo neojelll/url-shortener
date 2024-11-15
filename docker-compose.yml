@@ -103,3 +103,4 @@ services:
 volumes:
   redis_data:
   postgres_data:
+
