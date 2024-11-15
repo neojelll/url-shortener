@@ -8,8 +8,11 @@ from sqlalchemy import select
 from datetime import datetime
 from .logger import configure_logger
 from loguru import logger
+from dotenv import load_dotenv
 import os
 
+
+load_dotenv()
 
 configure_logger()
 
@@ -28,7 +31,7 @@ class DataBase:
 
     async def get_long_url(self, short_value: str) -> None | str:
         try:
-            logger.debug(f"Start get_long_url, params: {short_value}")
+            logger.debug(f'Start get_long_url, params: {short_value}')
             result = await self.session.execute(
                 select(LongUrl)
                 .join(UrlMapping)
@@ -39,15 +42,15 @@ class DataBase:
 
             if long_url is not None:
                 return_value = str(long_url.long_value)
-                logger.debug(f"long_url is not None, returned: {return_value}")
+                logger.debug(f'long_url is not None, returned: {return_value}')
                 return return_value
-            logger.debug("long_url is None, returned: None")
+            logger.debug('long_url is None, returned: None')
         except Exception as e:
-            logger.error(f"An error occurred while fetching long URL: {e}")
+            logger.error(f'An error occurred while fetching long URL: {e}')
 
     async def get_expiration(self, short_value: str) -> None | int:
         try:
-            logger.debug(f"Start get_expiration, params: {short_value}")
+            logger.debug(f'Start get_expiration, params: {short_value}')
             result = await self.session.execute(
                 select(UrlMapping)
                 .join(ShortUrl)
@@ -60,11 +63,11 @@ class DataBase:
                 create_time = date.hour
                 current_time = datetime.now().time().hour
                 return_value = max(int((create_time + expiration) - current_time), 0)
-                logger.debug(f"expiration is not None, returned: {return_value}")
+                logger.debug(f'expiration is not None, returned: {return_value}')
                 return return_value
-            logger.debug("expiration is None, returned: None")
+            logger.debug('expiration is None, returned: None')
         except Exception as e:
-            logger.error(f"An error occurred while fetching long URL: {e}")
+            logger.error(f'An error occurred while fetching long URL: {e}')
 
     async def __aexit__(self, exc_type, exc_value, traceback) -> None:
         await self.session.aclose()
