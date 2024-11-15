@@ -31,6 +31,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
 addopts = "-v --cov=expiration_manager --cov-report term-missing --cov-fail-under=70"
 markers = [
     "skip: run",
@@ -54,6 +55,7 @@ fix = true
 
 [tool.ruff.format]
 indent-style = "space"
+quote-style = "single"
 
 [lint]
 ignore = ["E501"]

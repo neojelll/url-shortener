@@ -7,12 +7,12 @@ def configure_logger():
 
     logger.add(
         sys.stderr,
-        format="{time:YYYY-MM-DD at HH:mm:ss} <level>{level}</level> <red>{name}</red>: <red>{function}</red>({line}) - <cyan>{message}</cyan>",
-        level="DEBUG",
+        format='{time:YYYY-MM-DD at HH:mm:ss} <level>{level}</level> <red>{name}</red>: <red>{function}</red>({line}) - <cyan>{message}</cyan>',
+        level='DEBUG',
     )
 
     logger.add(
-        "expiration-manager.log",
-        format="{time:YYYY-MM-DD at HH:mm:ss} {level} {name}: {function}({line}) - {message}",
-        level="DEBUG",
+        'expiration-manager.log',
+        format='{time:YYYY-MM-DD at HH:mm:ss} {level} {name}: {function}({line}) - {message}',
+        level='DEBUG',
     )

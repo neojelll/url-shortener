@@ -7,18 +7,18 @@ from expiration_manager.db import DataBase
 @pytest_asyncio.fixture
 async def mock_db(mocker):
     with patch.dict(
-        "os.environ",
+        'os.environ',
         {
-            "DB_HOST": "postgres",
-            "DB_NAME": "mydatabase",
-            "DB_USERNAME": "neojelll",
-            "DB_PASSWORD": "123",
-            "DB_PORT": "5432",
+            'DB_HOST': 'postgres',
+            'DB_NAME': 'mydatabase',
+            'DB_USERNAME': 'neojelll',
+            'DB_PASSWORD': '123',
+            'DB_PORT': '5432',
         },
     ):
-        mocker.patch("expiration_manager.db.create_async_engine", autospec=True)
+        mocker.patch('expiration_manager.db.create_async_engine', autospec=True)
         mock_sessionmaker = mocker.patch(
-            "expiration_manager.db.async_sessionmaker", autospec=True
+            'expiration_manager.db.async_sessionmaker', autospec=True
         )
         mock_session = AsyncMock()
         mock_sessionmaker.return_value = MagicMock(return_value=mock_session)
@@ -53,7 +53,7 @@ async def test_aenter(mock_db):
 @pytest.mark.asyncio
 async def test_delete_after_time_error(mock_db):
     db, mock_session = mock_db
-    mock_session.execute = AsyncMock(side_effect=Exception("DB error"))
+    mock_session.execute = AsyncMock(side_effect=Exception('DB error'))
     mock_session.rollback = AsyncMock()
     result = await db.delete_after_time()
     assert result == 0
