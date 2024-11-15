@@ -9,8 +9,11 @@ from sqlalchemy.orm import relationship, DeclarativeBase
 from sqlalchemy import func, select, delete, text
 from .logger import configure_logger
 from loguru import logger
+from dotenv import load_dotenv
 import os
 
+
+load_dotenv()
 
 configure_logger()
 
@@ -20,25 +23,25 @@ class Base(AsyncAttrs, DeclarativeBase):
 
 
 class LongUrl(Base):
-    __tablename__ = "long_url"
+    __tablename__ = 'long_url'
     long_id = Column(Integer, primary_key=True)
     long_value = Column(String(250), unique=True, nullable=False)
 
 
 class ShortUrl(Base):
-    __tablename__ = "short_url"
+    __tablename__ = 'short_url'
     short_id = Column(Integer, primary_key=True)
     short_value = Column(String(250), nullable=False)
 
 
 class UrlMapping(Base):
-    __tablename__ = "url_mapping"
-    short_id = Column(Integer, ForeignKey("short_url.short_id"), primary_key=True)
-    long_id = Column(Integer, ForeignKey("long_url.long_id"), nullable=False)
+    __tablename__ = 'url_mapping'
+    short_id = Column(Integer, ForeignKey('short_url.short_id'), primary_key=True)
+    long_id = Column(Integer, ForeignKey('long_url.long_id'), nullable=False)
     expiration = Column(Integer, nullable=False)
     date = Column(TIMESTAMP, nullable=False)
-    short_url = relationship("ShortUrl", backref="url_mappings")
-    long_url = relationship("LongUrl", backref="url_mappings")
+    short_url = relationship('ShortUrl', backref='url_mappings')
+    long_url = relationship('LongUrl', backref='url_mappings')
 
 
 class DataBase:
@@ -65,7 +68,7 @@ class DataBase:
             expired_mappings = result.scalars().all()
 
             if not expired_mappings:
-                logger.info("No expired records found.")
+                logger.info('No expired records found.')
                 return 0
 
             delete_stmt = delete(UrlMapping).where(
@@ -75,11 +78,11 @@ class DataBase:
             await self.session.execute(delete_stmt)
             await self.session.commit()
 
-            logger.info(f"Deleted {len(expired_mappings)} expired records.")
+            logger.info(f'Deleted {len(expired_mappings)} expired records.')
 
             return expired_mappings
         except Exception as e:
-            logger.error(f"Error when deleting records: {e}")
+            logger.error(f'Error when deleting records: {e}')
             await self.session.rollback()
             return 0
 

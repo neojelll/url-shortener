@@ -8,8 +8,11 @@ from sqlalchemy.future import select
 from sqlalchemy import func
 from .logger import configure_logger
 from loguru import logger
+from dotenv import load_dotenv
 import os
 
+
+load_dotenv()
 
 configure_logger()
 
@@ -28,7 +31,7 @@ class DataBase:
 
     async def create_recording(self, short_url, long_url, expiration):
         try:
-            logger.debug("add new tables in db...")
+            logger.debug('add new tables in db...')
             new_long_url = LongUrl(long_value=long_url)
             new_short_url = ShortUrl(short_value=short_url)
             self.session.add(new_long_url)
@@ -43,20 +46,20 @@ class DataBase:
             self.session.add(new_url_mapping)
             await self.session.commit()
             logger.info(
-                f"New long URL created: {new_long_url.long_value} with ID: {new_long_url.long_id}"
+                f'New long URL created: {new_long_url.long_value} with ID: {new_long_url.long_id}'
             )
             logger.info(
-                f"New short URL created: {new_short_url.short_value} with ID: {new_short_url.short_id}"
+                f'New short URL created: {new_short_url.short_value} with ID: {new_short_url.short_id}'
             )
             logger.info(
-                f"New UrlMapping created with long ID: {new_long_url.long_id} and short ID: {new_short_url.short_id}"
+                f'New UrlMapping created with long ID: {new_long_url.long_id} and short ID: {new_short_url.short_id}'
             )
         except Exception as e:
-            logger.error(f"Error when writing data to the DB: {e}")
+            logger.error(f'Error when writing data to the DB: {e}')
 
     async def check_short_url(self, short_value):
         try:
-            logger.debug(f"select a short_url from a short_url: {short_value}")
+            logger.debug(f'select a short_url from a short_url: {short_value}')
             result = await self.session.execute(
                 select(ShortUrl).where(ShortUrl.short_value == short_value)
             )
@@ -67,7 +70,7 @@ class DataBase:
                 logger.info(f"Short_url '{short_value}' does not exists in db")
             return short_url
         except Exception as e:
-            logger.error(f"Error when checking short_url from db: {e}")
+            logger.error(f'Error when checking short_url from db: {e}')
             return None
 
     async def __aexit__(self, exc_type, exc_value, traceback):
