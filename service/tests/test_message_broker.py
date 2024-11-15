@@ -7,16 +7,16 @@ from service.message_broker import BrokerConsumer
 @pytest_asyncio.fixture
 async def mock_broker(mocker):
     with patch.dict(
-        "os.environ",
+        'os.environ',
         {
-            "BROKER_HOST": "kafka",
-            "BROKER_PORT": "9092",
-            "SHORTENER_TOPIC_NAME": "my_topic",
+            'BROKER_HOST': 'kafka',
+            'BROKER_PORT': '9092',
+            'SHORTENER_TOPIC_NAME': 'my_topic',
         },
     ):
         mock_consumer = AsyncMock()
         mocker.patch(
-            "service.message_broker.AIOKafkaConsumer",
+            'service.message_broker.AIOKafkaConsumer',
             return_value=mock_consumer,
         )
         return mock_consumer
@@ -25,11 +25,11 @@ async def mock_broker(mocker):
 @pytest.mark.asyncio
 async def test_message_broker_init(mock_broker):
     with patch.dict(
-        "os.environ",
+        'os.environ',
         {
-            "BROKER_HOST": "kafka",
-            "BROKER_PORT": "9092",
-            "SHORTENER_TOPIC_NAME": "my_topic",
+            'BROKER_HOST': 'kafka',
+            'BROKER_PORT': '9092',
+            'SHORTENER_TOPIC_NAME': 'my_topic',
         },
     ):
         _ = mock_broker
@@ -40,29 +40,29 @@ async def test_message_broker_init(mock_broker):
 @pytest.mark.asyncio
 async def test_consume_data(mock_broker):
     with patch.dict(
-        "os.environ",
+        'os.environ',
         {
-            "BROKER_HOST": "kafka",
-            "BROKER_PORT": "9092",
-            "SHORTENER_TOPIC_NAME": "my_topic",
+            'BROKER_HOST': 'kafka',
+            'BROKER_PORT': '9092',
+            'SHORTENER_TOPIC_NAME': 'my_topic',
         },
     ):
         mock_consumer = mock_broker
-        mock_consumer.__aiter__.return_value = iter([AsyncMock(value=b"test_message")])
+        mock_consumer.__aiter__.return_value = iter([AsyncMock(value=b'test_message')])
 
         async with BrokerConsumer() as broker:
             messages = [msg async for msg in broker.consume_data()]
-            assert messages == ["test_message"]
+            assert messages == ['test_message']
 
 
 @pytest.mark.asyncio
 async def test_consume_data_empty_message(mock_broker):
     with patch.dict(
-        "os.environ",
+        'os.environ',
         {
-            "BROKER_HOST": "kafka",
-            "BROKER_PORT": "9092",
-            "SHORTENER_TOPIC_NAME": "my_topic",
+            'BROKER_HOST': 'kafka',
+            'BROKER_PORT': '9092',
+            'SHORTENER_TOPIC_NAME': 'my_topic',
         },
     ):
         mock_consumer = mock_broker
@@ -76,15 +76,15 @@ async def test_consume_data_empty_message(mock_broker):
 @pytest.mark.asyncio
 async def test_consume_data_error_handling(mock_broker):
     with patch.dict(
-        "os.environ",
+        'os.environ',
         {
-            "BROKER_HOST": "kafka",
-            "BROKER_PORT": "9092",
-            "SHORTENER_TOPIC_NAME": "my_topic",
+            'BROKER_HOST': 'kafka',
+            'BROKER_PORT': '9092',
+            'SHORTENER_TOPIC_NAME': 'my_topic',
         },
     ):
         mock_consumer = mock_broker
-        mock_consumer.__aiter__.side_effect = Exception("Test exception")
+        mock_consumer.__aiter__.side_effect = Exception('Test exception')
 
         async with BrokerConsumer() as broker:
             messages = [msg async for msg in broker.consume_data()]

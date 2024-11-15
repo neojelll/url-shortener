@@ -49,6 +49,7 @@ fix = true
 
 [tool.ruff.format]
 indent-style = "space"
+quote-style = "single"
 
 [lint]
 ignore = ["E501"]
