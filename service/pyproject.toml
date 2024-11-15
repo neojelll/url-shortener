@@ -16,6 +16,7 @@ asyncpg = "^0.29.0"
 loguru = "^0.7.2"
 redis = "^5.1.1"
 aiokafka = "^0.11.0"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.4"
@@ -32,6 +33,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
 addopts = "-v --cov=service --cov-report term-missing --cov-fail-under=90"
 
 [tool.coverage.run]

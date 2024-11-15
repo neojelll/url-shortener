@@ -1,9 +1,12 @@
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from .logger import configure_logger
 from loguru import logger
+from dotenv import load_dotenv
 import json
 import os
 
+
+load_dotenv()
 
 configure_logger()
 
