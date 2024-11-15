@@ -9,8 +9,11 @@ from sqlalchemy.orm import relationship, DeclarativeBase
 from sqlalchemy import func, select, delete, text
 from .logger import configure_logger
 from loguru import logger
+from dotenv import load_dotenv
 import os
 
+
+load_dotenv()
 
 configure_logger()
 
