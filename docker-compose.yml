@@ -72,32 +72,17 @@ services:
         condition: service_healthy
 
   expiration-manager:
-    image: ghcr.io/neojelll/url-shortener-expiration-manager:0.1.29
-    environment:
-      DB_USERNAME: "neojelll"
-      DB_HOST: "postgres"
-      DB_PORT: "5432"
-      DB_NAME: "mydatabase"
-      DB_PASSWORD: "123"
+    image: ghcr.io/neojelll/url-shortener-expiration-manager:latest
+    env_file:
+      - ./.env
     depends_on:
       postgres:
         condition: service_healthy
 
   url-shortener:
     image: ghcr.io/neojelll/url-shortener-service:latest
-    environment:
-      CACHE_TTL: "3600"
-      CACHE_HOST: "redis"
-      CACHE_PORT: "6379"
-      BROKER_HOST: "kafka"
-      BROKER_PORT: "9092"
-      DB_USERNAME: "neojelll"
-      DB_HOST: "postgres"
-      DB_PORT: "5432"
-      DB_NAME: "mydatabase"
-      DB_PASSWORD: "123"
-      SHORTENER_TOPIC_NAME: "main"
-      TASK_TOPIC_NAME: "task"
+    env_file:
+      - ./.env
     depends_on:
       redis:
         condition: service_healthy
