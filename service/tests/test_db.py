@@ -4,25 +4,25 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from service.db import DataBase
 
 
-SHORT_URL = "shortener.com"
-LONG_URL = "http://urlshortener.com"
+SHORT_URL = 'shortener.com'
+LONG_URL = 'http://urlshortener.com'
 EXPIRATION = 5
 
 
 @pytest_asyncio.fixture
 async def mock_db(mocker):
     with patch.dict(
-        "os.environ",
+        'os.environ',
         {
-            "DB_HOST": "postgres",
-            "DB_NAME": "mydatabase",
-            "DB_USERNAME": "neojelll",
-            "DB_PASSWORD": "123",
-            "DB_PORT": "5432",
+            'DB_HOST': 'postgres',
+            'DB_NAME': 'mydatabase',
+            'DB_USERNAME': 'neojelll',
+            'DB_PASSWORD': '123',
+            'DB_PORT': '5432',
         },
     ):
-        mocker.patch("service.db.create_async_engine", autospec=True)
-        mock_sessionmaker = mocker.patch("service.db.async_sessionmaker", autospec=True)
+        mocker.patch('service.db.create_async_engine', autospec=True)
+        mock_sessionmaker = mocker.patch('service.db.async_sessionmaker', autospec=True)
         mock_session = AsyncMock()
         mock_sessionmaker.return_value = MagicMock(return_value=mock_session)
         db = DataBase()
@@ -55,13 +55,13 @@ async def test_create_recording(mock_db):
 @pytest.mark.asyncio
 async def test_create_recording_error(mock_db):
     db, mock_session = mock_db
-    mock_session.add = MagicMock(side_effect=Exception("DB error"))
+    mock_session.add = MagicMock(side_effect=Exception('DB error'))
     mock_session.commit = AsyncMock()
     await db.create_recording(LONG_URL, SHORT_URL, EXPIRATION)
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("expected, short_url", [(None, None), (SHORT_URL, SHORT_URL)])
+@pytest.mark.parametrize('expected, short_url', [(None, None), (SHORT_URL, SHORT_URL)])
 async def test_check_short_url(mock_db, expected, short_url):
     db, mock_session = mock_db
     execute_result = MagicMock()
@@ -75,7 +75,7 @@ async def test_check_short_url(mock_db, expected, short_url):
 @pytest.mark.asyncio
 async def test_check_short_url_error(mock_db):
     db, mock_session = mock_db
-    mock_session.execute.side_effect = Exception("DB error")
+    mock_session.execute.side_effect = Exception('DB error')
     result = await db.check_short_url(SHORT_URL)
     assert result is None
     mock_session.execute.assert_awaited_once()
