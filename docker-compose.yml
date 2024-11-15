@@ -46,10 +46,8 @@ services:
 
   postgres:
     image: postgres:latest
-    environment:
-      POSTGRES_USER: "neojelll"
-      POSTGRES_DB: "mydatabase"
-      POSTGRES_PASSWORD: "123"
+    env_file:
+      - ./.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./initdb.d:/docker-entrypoint-initdb.d
@@ -63,19 +61,8 @@ services:
     image: ghcr.io/neojelll/url-shortener-api:latest
     ports:
       - "8000:8000"
-    environment:
-      CACHE_TTL: "3600"
-      CACHE_HOST: "redis"
-      CACHE_PORT: "6379"
-      BROKER_HOST: "kafka"
-      BROKER_PORT: "9092"
-      DB_USERNAME: "neojelll"
-      DB_HOST: "postgres"
-      DB_PORT: "5432"
-      DB_NAME: "mydatabase"
-      DB_PASSWORD: "123"
-      SHORTENER_TOPIC_NAME: "main"
-      TASK_TOPIC_NAME: "task"
+    env_file:
+      - ./.env
     depends_on:
       redis:
         condition: service_healthy
