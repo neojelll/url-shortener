@@ -1,8 +1,11 @@
 from redis.asyncio import Redis
 from api.logger import configure_logger
+from dotenv import load_dotenv
 from loguru import logger
 import os
 
+
+load_dotenv()
 
 configure_logger()
 

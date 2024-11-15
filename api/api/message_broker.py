@@ -1,10 +1,13 @@
 from aiokafka import AIOKafkaProducer, AIOKafkaConsumer
 from .logger import configure_logger
 from loguru import logger
+from dotenv import load_dotenv
 import asyncio
 import os
 import json
 
+
+load_dotenv()
 
 configure_logger()
 
