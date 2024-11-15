@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neojelll-url-shortener-expiration-manager"
-version = "0.1.29"
+version = "0.1.30"
 description = ""
 authors = ["neojelll <timofejmitusin60892@gmail.com>"]
 readme = "README.md"
@@ -14,6 +14,7 @@ python = "^3.12"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.35"}
 asyncpg = "^0.29.0"
 loguru = "^0.7.2"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.4"
@@ -30,6 +31,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
 addopts = "-v --cov=expiration_manager --cov-report term-missing --cov-fail-under=70"
 markers = [
     "skip: run",
@@ -53,6 +55,7 @@ fix = true
 
 [tool.ruff.format]
 indent-style = "space"
+quote-style = "single"
 
 [lint]
 ignore = ["E501"]
