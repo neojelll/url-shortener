@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neojelll-url-shortener-api"
-version = "0.1.4"
+version = "0.1.25"
 description = ""
 authors = ["neojelll <timofejmitusin60892@gmail.com>"]
 readme = "README.md"
@@ -13,26 +13,38 @@ packages = [
 python = "^3.12"
 fastapi = "^0.112.2"
 uvicorn = "^0.30.6"
-kafka-python-ng = "^2.2.2"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.35"}
+asyncpg = "^0.29.0"
+aiokafka = "^0.11.0"
 redis = "^5.0.8"
 loguru = "^0.7.2"
-pytest-asyncio = "^0.24.0"
-asyncpg = "^0.29.0"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.4"
 pytest = "^8.3.2"
 pytest-mock = "^3.14.0"
+pytest-asyncio = "^0.24.0"
 httpx = "^0.27.2"
 pytest-cov = "^5.0.0"
+
+[tool.poetry.scripts]
+neojelll-url-shortener-api = "api.main:run"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry.scripts]
-neojelll-url-shortener-api = "api.main:run"
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+omit = [
+    "api/main.py",
+    "api/logger.py",
+    "api/models.py",
+    ]
 
 [tool.ruff]
 target-version = "py312"
@@ -41,6 +53,7 @@ fix = true
 
 [tool.ruff.format]
 indent-style = "space"
+quote-style = "single"
 
 [lint]
 ignore = ["E501"]

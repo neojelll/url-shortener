@@ -12,7 +12,7 @@ def configure_logger():
     )
 
     logger.add(
-        'expiration-manager.log',
+        'url-shortener-service.log',
         format='{time:YYYY-MM-DD at HH:mm:ss} {level} {name}: {function}({line}) - {message}',
         level='DEBUG',
     )

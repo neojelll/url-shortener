@@ -9,3 +9,6 @@ dist/
 #python
 __pycache__/
 *.pyс
+
+#environment
+.env

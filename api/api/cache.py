@@ -1,24 +1,54 @@
-from redis import Redis
+from redis.asyncio import Redis
+from api.logger import configure_logger
+from dotenv import load_dotenv
+from loguru import logger
 import os
 
 
-def ttl():
-    result = os.environ["CACHE_TTL"]
-    return int(result)
+load_dotenv()
+
+configure_logger()
 
 
-class Cache(object):
-    def __init__(self):
-        self.cache = Redis(host="localhost", port=6379, db=0, decode_responses=True)
+async def ttl() -> int:
+    try:
+        result = os.environ['CACHE_TTL']
+        logger.debug('successfully obtained the value of the environment variable')
+        return int(result)
+    except Exception as e:
+        logger.warning(f'CACHE_TTL environment variable error: {e}')
+        return 3600
+
+
+class Cache:
+    def __init__(self) -> None:
+        self.cache = Redis(
+            host=os.environ['CACHE_HOST'],
+            port=int(os.environ['CACHE_PORT']),
+            decode_responses=True,
+        )
 
     async def __aenter__(self):
         return self
 
-    async def check(self, short_url):
-        return await self.cache.get(short_url)
+    async def check(self, short_url) -> None | str:
+        try:
+            logger.debug(f'Start cache get with: {short_url}')
+            return_value = await self.cache.get(short_url)
+            logger.debug(f'returned: {return_value}')
+            return return_value
+        except Exception as e:
+            logger.debug(f'Error when get data with cache: {e}')
 
-    async def set(self, short_url, long_url, expiration):
-        await self.cache.set(short_url, long_url, ex=min(ttl(), expiration))
+    async def set(self, short_url, long_url, expiration) -> None:
+        try:
+            exp = min(await ttl(), expiration)
 
-    async def __aexit__(self, exc_type, exc_value, traceback):
-        await self.cache.close()  # type: ignore
+            logger.debug(f'Start cache set with: {short_url, long_url, exp}')
+            await self.cache.set(short_url, long_url, ex=exp)
+            logger.debug('Sucsessfully set to cache')
+        except Exception as e:
+            logger.error(f'Error when set in cache: {e}')
+
+    async def __aexit__(self, exc_type, exc_value, traceback) -> None:
+        await self.cache.aclose()
