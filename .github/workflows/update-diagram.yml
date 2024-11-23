@@ -9,7 +9,7 @@ run:
       - '/architecture/architecture/c4-model.py'
 
 jobs:
-  update:
+  updatediagram:
     runs-on: ubuntu-latest
     
     steps:
