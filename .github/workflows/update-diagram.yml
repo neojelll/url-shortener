@@ -6,38 +6,38 @@ on:
       - '**'
       - '!main'
     paths:
-      - '/architecture/architecture/c4-model.py'
+      - architecture/architecture/c4-model.py  # Уберите начальный слэш
 
 jobs:
   diagram:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Добавьте это для указания, на какой ОС будет выполняться шаг
 
     steps:
-    - uses: actions/checkout@v4
-    with:
-      fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-    - name: Install graphviz
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y graphviz
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
 
-    - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    - name: Install dependencies
-      run: |
-        poetry install
-      working-directory: architecture
+      - name: Install dependencies
+        run: |
+          poetry install
+        working-directory: architecture
 
-    - name: Update diagram
-      run: |
-        poetry run python architecture/c4-model.py
-      working-directory: architecture
+      - name: Update diagram
+        run: |
+          poetry run python architecture/c4-model.py
+        working-directory: architecture
