@@ -9,7 +9,7 @@ run:
       - '/architecture/architecture/c4-model.py'
 
 jobs:
-  update-diagram:
+  update:
     runs-on: ubuntu-latest
     
     steps:
@@ -24,8 +24,8 @@ jobs:
 
     - name: Install graphviz
       run: |
-        sudo apt update
-        sudo apt install graphviz
+        sudo apt-get update
+        sudo apt-get install -y graphviz
 
     - name: Install Poetry
       run: |
@@ -39,5 +39,5 @@ jobs:
 
     - name: Update diagram
       run: |
-        poetry run c4-model.py
+        poetry run python architecture/c4-model.py
       working-directory: architecture
