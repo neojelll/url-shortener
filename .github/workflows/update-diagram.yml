@@ -1,6 +1,6 @@
 name: Update diagram
 
-run:
+on:
   push:
     branches:
       - '**'
@@ -9,7 +9,7 @@ run:
       - '/architecture/architecture/c4-model.py'
 
 jobs:
-  updatediagram:
+  update-diagram:
     runs-on: ubuntu-latest
     
     steps:
