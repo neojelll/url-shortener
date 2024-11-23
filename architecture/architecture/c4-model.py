@@ -11,7 +11,6 @@ from diagrams.c4 import (
 
 graph_attr = {
     'splines': 'spline',
-    'bgcolor': '#000000',
 }
 
 
@@ -62,12 +61,6 @@ with Diagram(filename=file_path, show=False, direction='TB', graph_attr=graph_at
                 description='Stores original and shortened URLs\nStores expiration',
             )
 
-            cache = Container(
-                name='Cache',
-                technology='Redis',
-                description='Stored frequently requested URLs',
-            )
-
             expiration_manager = Container(
                 name='Expiration Manager',
                 technology='Python',
@@ -94,8 +87,6 @@ with Diagram(filename=file_path, show=False, direction='TB', graph_attr=graph_at
 
         api >> Relationship('try to request long url from db cache') << database
 
-        api >> Relationship('try to request long url from db cache') << cache
-
         (
             broker
             >> Relationship('consume long URL for topic and send short URL in topic')
@@ -108,10 +99,4 @@ with Diagram(filename=file_path, show=False, direction='TB', graph_attr=graph_at
             >> database
             << Relationship('deleted continue expirated URLs')
             << expiration_manager
-        )
-
-        (
-            shortener_service
-            >> Relationship('create records and checking the short URL for existence')
-            << cache
         )
