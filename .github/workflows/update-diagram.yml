@@ -6,11 +6,11 @@ on:
       - '**'
       - '!main'
     paths:
-      - architecture/architecture/c4-model.py  # Уберите начальный слэш
+      - architecture/architecture/c4-model.py
 
 jobs:
   diagram:
-    runs-on: ubuntu-latest  # Добавьте это для указания, на какой ОС будет выполняться шаг
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -41,3 +41,13 @@ jobs:
         run: |
           poetry run python architecture/c4-model.py
         working-directory: architecture
+      
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add architecture/diagrams/container-diagram.png
+          git commit -m "Update diagram" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
