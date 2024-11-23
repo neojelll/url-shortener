@@ -1,2 +1,2 @@
-def test_pass():
+def test_pass(mocker):
     pass
