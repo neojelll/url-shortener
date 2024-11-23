@@ -11,6 +11,7 @@ from diagrams.c4 import (
 
 graph_attr = {
     'splines': 'spline',
+    'bgcolor': '#000000',
 }
 
 
@@ -113,4 +114,4 @@ with Diagram(filename=file_path, show=False, direction='TB', graph_attr=graph_at
             shortener_service
             >> Relationship('create records and checking the short URL for existence')
             << cache
-        )       
+        )
