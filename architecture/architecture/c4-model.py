@@ -14,7 +14,7 @@ graph_attr = {
 }
 
 
-file_path = '/Users/timofei/My_Project/architecture/diagrams/container-diagram'
+file_path = 'architecture/diagrams/container-diagram'
 
 
 with Diagram(filename=file_path, show=False, direction='TB', graph_attr=graph_attr):
@@ -113,4 +113,4 @@ with Diagram(filename=file_path, show=False, direction='TB', graph_attr=graph_at
             shortener_service
             >> Relationship('create records and checking the short URL for existence')
             << cache
-        )      
+        )       
