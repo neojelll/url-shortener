@@ -9,9 +9,9 @@ on:
       - '/architecture/architecture/c4-model.py'
 
 jobs:
-  update-diagram:
+  diagram:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
     with:
