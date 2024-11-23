@@ -1,0 +1,53 @@
+name: Update diagram
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!main'
+    paths:
+      - architecture/architecture/c4-model.py
+
+jobs:
+  diagram:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          poetry install
+        working-directory: architecture
+
+      - name: Update diagram
+        run: |
+          poetry run python architecture/c4-model.py
+        working-directory: architecture
+      
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add architecture/diagrams/container-diagram.png
+          git commit -m "Update diagram" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
