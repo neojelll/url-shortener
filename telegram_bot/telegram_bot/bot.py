@@ -79,9 +79,7 @@ async def shorten(message: types.Message):
                 result_post = await response.json()
                 task_num = result_post['task']
 
-            async with session.get(
-                os.environ['GET_URL'] + f'{task_num}'
-            ) as response:
+            async with session.get(os.environ['GET_URL'] + f'{task_num}') as response:
                 result_get = await response.json()
 
             await message.reply(
