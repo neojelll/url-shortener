@@ -1,10 +1,10 @@
 # URL Shortener
 
-![GitHub Release](https://img.shields.io/github/v/release/neojelll/url-shortener?include_prereleases&sort=semver&display_name=release&style=plastic)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/neojelll/url-shortener/.github%2Fworkflows%2Fpublish.yml?style=plastic)
-![Static Badge](https://img.shields.io/badge/python-3.12-blue?style=plastic)
-![GitHub contributors](https://img.shields.io/github/contributors/neojelll/url-shortener?style=plastic)
-![GitHub Repo stars](https://img.shields.io/github/stars/neojelll/url-shortener?style=plastic)
+![GitHub Release](https://img.shields.io/github/v/release/neojelll/url-shortener?include_prereleases&display_name=release&style=flat-square)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/neojelll/url-shortener/.github%2Fworkflows%2Fpublish.yml?style=flat-square)
+![Static Badge](https://img.shields.io/badge/python-3.12-blue?style=flat-square)
+![GitHub contributors](https://img.shields.io/github/contributors-anon/neojelll/url-shortener?style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/neojelll/url-shortener?style=social)
 
 ## Use Cases
 
