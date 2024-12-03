@@ -69,7 +69,7 @@ async def shorten(message: types.Message):
 
         async with aiohttp.ClientSession() as session:
             async with session.post(
-                'http://my_project-api-1:8000/v1/url/shorten',
+                os.environ['GET_URL'],
                 json=result,
             ) as response:
                 if response.status == 400:
@@ -79,9 +79,7 @@ async def shorten(message: types.Message):
                 result_post = await response.json()
                 task_num = result_post['task']
 
-            async with session.get(
-                f'http://my_project-api-1:8000/v1/url/shorten?task_num={task_num}'
-            ) as response:
+            async with session.get(os.environ['GET_URL'] + f'{task_num}') as response:
                 result_get = await response.json()
 
             await message.reply(
