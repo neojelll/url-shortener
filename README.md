@@ -6,6 +6,8 @@
 ![GitHub contributors](https://img.shields.io/github/contributors-anon/neojelll/url-shortener?style=social)
 ![GitHub Repo stars](https://img.shields.io/github/stars/neojelll/url-shortener?style=social)
 
+URL-shortener is a service for shortening links so that an ugly long link can be presented as a short, neat link
+
 ## Use Cases
 
 ### General
