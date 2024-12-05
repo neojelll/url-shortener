@@ -23,10 +23,6 @@ URL-shortener is a service for shortening links so that an ugly long link can be
 * При использовании короткой ссылки будет перенаправлен по оригинальной
 * Если время ссылки истекло, пользователь получит в ответ статическую страницу с информацией о том что ссылка не существовала либо уже не валидна
 
-### WebUI
-
-Все то же что описано в General, с помощью SPA (Single Page Application) WebUI
-
 ### Telegram
 
 Все то же что описано в General, с помощью бота в Telegram
