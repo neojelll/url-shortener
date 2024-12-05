@@ -48,6 +48,8 @@ jobs:
       - name: Build and publish package
         run: |
           cd ${{ env.PROJECT_NAME }}
+          poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
+          export PYPI_TOKEN=${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
           poetry run release
 
       - name: Check version
