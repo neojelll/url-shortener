@@ -6,4 +6,4 @@
        "@semantic-release/pypi",
        "@semantic-release/git"
     ]
-   }  
+   }
