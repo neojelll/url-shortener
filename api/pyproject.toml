@@ -31,7 +31,6 @@ python-semantic-release = "^9.15.1"
 
 [tool.poetry.scripts]
 neojelll-url-shortener-api = "api.main:run"
-release = "api.release:run"
 
 [build-system]
 requires = ["poetry-core"]
