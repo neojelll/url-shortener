@@ -37,7 +37,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "function"
-addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=80"
+addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=100"
 
 [tool.coverage.run]
 omit = [
