@@ -1,5 +1,5 @@
 import subprocess
 
 
-def main():
+def run():
     subprocess.run(['semantic-release'], check=True)
