@@ -13,67 +13,77 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Check Project name
+      - name: Check directory name
         run: |
-          export PROJECT_NAME=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
-          echo "PROJECT_NAME=${PROJECT_NAME}" >> $GITHUB_ENV
-            
-      - name: Set up Python
+          DIRECTORY=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
+          export DIRECTORY=$(echo "${DIRECTORY}" | tr '_' '-')
+          echo "DIRECTORY=${DIRECTORY}" >> $GITHUB_ENV
+
+      - name: Check pyproject.toml in directory
+        id: check_file
+        run: |
+          if [ ! -f "${DIRECTORY}/pyproject.toml" ]; then
+            echo "File pyproject.toml not found in ${DIRECTORY}. Skipping job."
+            exit 0
+          fi
+
+      - name: Set up python
+        if: steps.check_file.outcome == 'success'
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: 3.12
 
-      - name: Install Poetry
+      - name: Set up qemu
+        if: steps.check_file.outcome == 'success'
+        uses: docker/setup-qemu-action@v3
+  
+      - name: Set up docker buildx
+        if: steps.check_file.outcome == 'success'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install poetry
+        if: steps.check_file.outcome == 'success'
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
+        if: steps.check_file.outcome == 'success'
         run: |
-          cd ${{ env.PROJECT_NAME }}
           poetry install
+        working-directory: ${{ env.DIRECTORY }}
 
-      - name: Build and publish package
+      - name: Up version, build and publish package
+        if: steps.check_file.outcome == 'success'
         run: |
-          cd ${{ env.PROJECT_NAME }}
           poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
           export PYPI_TOKEN=${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
-          poetry run semantic-release publish
-
-      - name: Check version
-        id: get_version
-        run: |
-          cd ${{ env.PROJECT_NAME }}
-          export VERSION=$(cat pyproject.toml | grep "^version =" | grep -Po '\d+\.\d+\.\w+')
+          VERSION=$(poetry run semantic-release publish)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: Wait for package availability
+        if: steps.check_file.outcome == 'success'
         run: |
           while true; do
-            if pip install neojelll-url-shortener-${{ env.PROJECT_NAME }}==$VERSION --dry-run; then
-              echo "The $VERSION version is available for installation."
+            if pip install neojelll-url-shortener-${{ env.DIRECTORY }}==${{ env.VERSION }} --dry-run; then
+              echo "The ${{ env.VERSION }} version is available for installation."
               break
             else
-              echo "$VERSION is not available. Try again in 2 seconds..."
+              echo "${{ env.VERSION }} is not available. Try again in 2 seconds..."
               sleep 2
             fi
           done
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
       - name: Build docker image and publish
+        if: steps.check_file.outcome == 'success'
         run: |
-          cd ${{ env.PROJECT_NAME }}
-          PROJECT_NAME=$(echo "${{ env.PROJECT_NAME }}" | tr '_' '-')
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io --username neojelll --password-stdin
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io --username neojelll --password-stdin
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-$PROJECT_NAME:${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-$PROJECT_NAME:latest --push .
+          docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-${{ env.DIRECTORY }}:${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-${{ env.DIRECTORY }}:latest --push .
+        working-directory: ${{ env.DIRECTORY }}
