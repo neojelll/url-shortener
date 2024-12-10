@@ -4,14 +4,13 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "**/pyproject.toml"
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
       packages: write
+      contents: write
 
     steps:
       - name: Checkout code
@@ -23,12 +22,6 @@ jobs:
         run: |
           export PROJECT_NAME=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
           echo "PROJECT_NAME=${PROJECT_NAME}" >> $GITHUB_ENV
-
-      - name: Check if version has changed
-        run: |
-          if ! git diff HEAD^ HEAD -- ${{ env.PROJECT_NAME }}/pyproject.toml | grep -q "version"; then
-            exit 1
-          fi
             
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -49,7 +42,8 @@ jobs:
         run: |
           cd ${{ env.PROJECT_NAME }}
           poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
-          poetry publish --build
+          export PYPI_TOKEN=${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
+          poetry run release
 
       - name: Check version
         id: get_version
