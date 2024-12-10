@@ -31,7 +31,7 @@ semantic-release = "^0.1.0"
 
 [tool.poetry.scripts]
 neojelll-url-shortener-api = "api.main:run"
-release = "semantic-release"
+release = "api.release:run"
 
 [build-system]
 requires = ["poetry-core"]
@@ -46,6 +46,7 @@ omit = [
     "api/main.py",
     "api/logger.py",
     "api/models.py",
+    "api/release.py",
     ]
 
 [tool.ruff]
