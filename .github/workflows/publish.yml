@@ -43,7 +43,7 @@ jobs:
           cd ${{ env.PROJECT_NAME }}
           poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
           export PYPI_TOKEN=${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
-          poetry run release
+          poetry run semantic-release publish
 
       - name: Check version
         id: get_version
