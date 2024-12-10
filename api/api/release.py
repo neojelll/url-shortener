@@ -2,4 +2,4 @@ import subprocess
 
 
 def run():
-    subprocess.run(['semantic-release'], check=True)
+    subprocess.run(['poetry', 'run', 'semantic-release'], check=True)
