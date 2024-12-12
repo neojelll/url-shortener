@@ -59,3 +59,12 @@ quote-style = "single"
 
 [lint]
 ignore = ["E501"]
+
+[tool.semantic_release]
+version_toml = [
+    "pyproject.toml:tool.poetry.version"
+]
+major_on_zero = false
+branch = "main"
+upload_to_PyPI = true
+build_command = "pip install poetry && poetry build"
