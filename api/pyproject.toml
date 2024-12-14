@@ -61,10 +61,15 @@ quote-style = "single"
 ignore = ["E501"]
 
 [tool.semantic_release]
-version_toml = [
-    "pyproject.toml:tool.poetry.version"
+version_variable = [
+    "pyproject.toml:version"
 ]
-major_on_zero = false
 branch = "main"
-upload_to_PyPI = true
+major_on_zero = false
+upload_to_pypi = true
+upload_to_release = true
 build_command = "pip install poetry && poetry build"
+
+[[tool.semantic-release.plugins]]
+name = "release-notes-generator"
+tag = false
