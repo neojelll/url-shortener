@@ -38,7 +38,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "function"
-addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=79"
+addopts = "-v --cov=api --cov-report term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
 omit = [
@@ -65,7 +65,6 @@ version_variable = [
     "pyproject.toml:version"
 ]
 branch = "main"
-tag = false
 major_on_zero = false
 upload_to_pypi = true
 upload_to_release = true
