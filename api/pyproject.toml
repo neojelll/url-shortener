@@ -65,11 +65,8 @@ version_variable = [
     "pyproject.toml:version"
 ]
 branch = "main"
+tag = false
 major_on_zero = false
 upload_to_pypi = true
 upload_to_release = true
 build_command = "pip install poetry && poetry build"
-
-[[tool.semantic-release.plugins]]
-name = "release-notes-generator"
-tag = false
