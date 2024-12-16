@@ -34,10 +34,11 @@ jobs:
             echo "PYPROJECT_FOUND=false" >> "$GITHUB_OUTPUT"
           fi
 
+
   publish:
     runs-on: ubuntu-latest
     needs: check_pyproject
-    if: needs.check_pyproject.outputs.pyproject_found
+    if: needs.check_pyproject.outputs.pyproject_found == true
     permissions:
       packages: write
       contents: write
