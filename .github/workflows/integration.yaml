@@ -10,8 +10,7 @@ jobs:
   check_pyproject:
     runs-on: ubuntu-latest
     outputs:
-      pyproject_found: ${{ steps.check_pyproject.outputs.found }}
-      directory: ${{ steps.check_directory.outputs.DIRECTORY }}
+      pyproject_found: ${{ steps.check_pyproject.outputs.PYPROJECT_FOUND }}
     
     steps:
       - name: Checkout repository
@@ -20,23 +19,19 @@ jobs:
           fetch-depth: 0
 
       - name: Check directory name
-        id: check_directory
         run: |
           DIRECTORY=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
-          export DIRECTORY=$(echo "${DIRECTORY}" | tr '_' '-')
           echo "DIRECTORY=${DIRECTORY}" >> $GITHUB_ENV
-          echo "::set-output name=DIRECTORY::$DIRECTORY"
 
       - name: Check pyproject.toml in directory
         id: check_pyproject
         run: |
           if [ ! -f "${DIRECTORY}/pyproject.toml" ]; then
             echo "File pyproject.toml not found in ${DIRECTORY}. Skipping job."
-            echo "::set-output name=found::false"
-            exit 0
+            echo "PYPROJECT_FOUND=true" >> "$GITHUB_OUTPUT"
           else:
             echo "File pyproject.toml found."
-            echo "::set-output name=found::true"
+            echo "PYPROJECT_FOUND=false" >> "$GITHUB_OUTPUT"
           fi
 
   integration:
@@ -49,6 +44,11 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Check directory name
+        run: |
+          DIRECTORY=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
+          echo "DIRECTORY=${DIRECTORY}" >> $GITHUB_ENV
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -62,27 +62,33 @@ jobs:
     - name: Install dependencies
       run: |
         poetry install
-      working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+      working-directory: ${{ env.DIRECTORY }}
 
     - name: Lint with Ruff
       run: |
-        poetry run ruff check ${{ needs.check_pyproject.outputs.DIRECTORY }}
-        poetry run ruff format --check ${{ needs.check_pyproject.outputs.DIRECTORY }}
-      working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+        poetry run ruff check ${{ env.DIRECTORY }}
+        poetry run ruff format --check ${{ env.DIRECTORY }}
+      working-directory: ${{ env.DIRECTORY }}
 
     - name: Test with pytest
       run: |
         poetry run pytest tests
-      working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+      working-directory: ${{ env.DIRECTORY }}
 
   bump-version:
     runs-on: ubuntu-latest
     needs: integration
+
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
+    - name: Check directory name
+        run: |
+          DIRECTORY=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
+          echo "DIRECTORY=${DIRECTORY}" >> $GITHUB_ENV
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -96,12 +102,12 @@ jobs:
     - name: Install dependencies
       run: |
         poetry install
-      working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+      working-directory: ${{ env.DIRECTORY }}
 
     - name: Bump version
       run: |
         poetry version patch
-      working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+      working-directory: ${{ env.DIRECTORY }}
 
     - name: Commit changes
       run: |
@@ -110,6 +116,6 @@ jobs:
         git add pyproject.toml
         git commit -m "Bump version" || echo "No changes to commit"
         git push
-      working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+      working-directory: ${{ env.DIRECTORY }}
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
