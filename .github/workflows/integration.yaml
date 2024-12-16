@@ -29,10 +29,10 @@ jobs:
           echo "Checking in directory: ${DIRECTORY}"
           if [ ! -f "${DIRECTORY}/pyproject.toml" ]; then
             echo "File pyproject.toml not found in ${DIRECTORY}. Skipping job."
-            echo "PYPROJECT_FOUND=true" >> "$GITHUB_OUTPUT"
+            echo "PYPROJECT_FOUND=false" >> "$GITHUB_OUTPUT"
           else
             echo "File pyproject.toml found."
-            echo "PYPROJECT_FOUND=false" >> "$GITHUB_OUTPUT"
+            echo "PYPROJECT_FOUND=true" >> "$GITHUB_OUTPUT"
           fi
 
   integration:
