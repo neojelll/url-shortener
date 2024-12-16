@@ -9,8 +9,7 @@ jobs:
   check_pyproject:
     runs-on: ubuntu-latest
     outputs:
-      pyproject_found: ${{ steps.check_pyproject.outputs.found }}
-      directory: ${{ steps.check_directory.outputs.DIRECTORY }}
+      pyproject_found: ${{ steps.check_pyproject.outputs.PYPROJECT_FOUND }}
     
     steps:
       - name: Checkout repository
@@ -19,24 +18,22 @@ jobs:
           fetch-depth: 0
 
       - name: Check directory name
-        id: check_directory
         run: |
           DIRECTORY=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
-          export DIRECTORY=$(echo "${DIRECTORY}" | tr '_' '-')
           echo "DIRECTORY=${DIRECTORY}" >> $GITHUB_ENV
-          echo "::set-output name=DIRECTORY::$DIRECTORY"
 
       - name: Check pyproject.toml in directory
         id: check_pyproject
         run: |
+          echo "Checking in directory: ${DIRECTORY}"
           if [ ! -f "${DIRECTORY}/pyproject.toml" ]; then
             echo "File pyproject.toml not found in ${DIRECTORY}. Skipping job."
-            echo "::set-output name=found::false"
-            exit 0
-          else:
+            echo "PYPROJECT_FOUND=false" >> "$GITHUB_OUTPUT"
+          else
             echo "File pyproject.toml found."
-            echo "::set-output name=found::true"
+            echo "PYPROJECT_FOUND=true" >> "$GITHUB_OUTPUT"
           fi
+
 
   publish:
     runs-on: ubuntu-latest
@@ -57,6 +54,12 @@ jobs:
         with:
           python-version: 3.12
 
+      - name: Check directory name
+        id: check_directory
+        run: |
+          DIRECTORY=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
+          echo "DIRECTORY=${DIRECTORY}" >> $GITHUB_ENV
+
       - name: Set up qemu
         uses: docker/setup-qemu-action@v3
   
@@ -71,24 +74,25 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install
-        working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: Check version
         run: |
           VERSION=$(poetry version -s)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
-        working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: build and publish package
         run: |
           poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
           poetry publish --build
-        working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+        working-directory: ${{ env.DIRECTORY }}
 
       - name: Wait for package availability
         run: |
+          export DIRECTORY=$(echo "${{ env.DIRECTORY }}" | tr '_' '-')
           while true; do
-            if pip install neojelll-url-shortener-${{ needs.check_pyproject.outputs.DIRECTORY }}==${{ env.VERSION }} --dry-run; then
+            if pip install neojelll-url-shortener-${{ env.DIRECTORY }}==${{ env.VERSION }} --dry-run; then
               echo "The ${{ env.VERSION }} version is available for installation."
               break
             else
@@ -99,7 +103,8 @@ jobs:
 
       - name: Build docker image and publish
         run: |
+          export DIRECTORY=$(echo "${{ env.DIRECTORY }}" | tr '_' '-')
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io --username neojelll --password-stdin
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-${{ needs.check_pyproject.outputs.DIRECTORY }}:${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-${{ needs.check_pyproject.outputs.DIRECTORY }}:latest --push .
-        working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+          docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-${{ env.DIRECTORY }}:${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-${{ env.DIRECTORY }}:latest --push .
+        working-directory: ${{ env.DIRECTORY }}
