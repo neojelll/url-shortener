@@ -6,9 +6,42 @@ on:
       - main
 
 jobs:
+  check_pyproject:
+    runs-on: ubuntu-latest
+    outputs:
+      pyproject_found: ${{ steps.check_pyproject.outputs.found }}
+      directory: ${{ steps.check_directory.outputs.DIRECTORY }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check directory name
+        id: check_directory
+        run: |
+          DIRECTORY=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
+          export DIRECTORY=$(echo "${DIRECTORY}" | tr '_' '-')
+          echo "DIRECTORY=${DIRECTORY}" >> $GITHUB_ENV
+          echo "::set-output name=DIRECTORY::$DIRECTORY"
+
+      - name: Check pyproject.toml in directory
+        id: check_pyproject
+        run: |
+          if [ ! -f "${DIRECTORY}/pyproject.toml" ]; then
+            echo "File pyproject.toml not found in ${DIRECTORY}. Skipping job."
+            echo "::set-output name=found::false"
+            exit 0
+          else:
+            echo "File pyproject.toml found."
+            echo "::set-output name=found::true"
+          fi
+
   publish:
     runs-on: ubuntu-latest
-    concurrency: release
+    needs: check_pyproject
+    if: needs.check_pyproject.outputs.pyproject_found == 'true'
     permissions:
       packages: write
       contents: write
@@ -18,65 +51,44 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
-
-      - name: Check directory name
-        run: |
-          DIRECTORY=$(git log -1 --name-only --pretty=format: | awk -F'/' '{print $1}' | sort -u | head -n 1)
-          export DIRECTORY=$(echo "${DIRECTORY}" | tr '_' '-')
-          echo "DIRECTORY=${DIRECTORY}" >> $GITHUB_ENV
-
-      - name: Check pyproject.toml in directory
-        id: check_file
-        run: |
-          if [ ! -f "${DIRECTORY}/pyproject.toml" ]; then
-            echo "File pyproject.toml not found in ${DIRECTORY}. Skipping job."
-            exit 0
-          fi
 
       - name: Set up python
-        if: steps.check_file.outcome == 'success'
         uses: actions/setup-python@v5
         with:
           python-version: 3.12
 
       - name: Set up qemu
-        if: steps.check_file.outcome == 'success'
         uses: docker/setup-qemu-action@v3
   
       - name: Set up docker buildx
-        if: steps.check_file.outcome == 'success'
         uses: docker/setup-buildx-action@v3
 
       - name: Install poetry
-        if: steps.check_file.outcome == 'success'
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
-        if: steps.check_file.outcome == 'success'
         run: |
           poetry install
-        working-directory: ${{ env.DIRECTORY }}
+        working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
 
-      - name: Up version, build and publish package
-        if: steps.check_file.outcome == 'success'
+      - name: Check version
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "action@github.com"
-          poetry run semantic-release version --print
-          poetry run semantic-release version --no-tag --push
-        env:
-          GH_TOKEN: ${{secrets.SEMANTIC_RELEASE_TOKEN}}
-          PyPI_TOKEN: ${{secrets.URL_SHORTENER_PUBLISH_TOKEN}}
-        working-directory: ${{ env.DIRECTORY }}
+          VERSION=$(poetry version -s)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
+
+      - name: build and publish package
+        run: |
+          poetry config pypi-token.pypi ${{ secrets.URL_SHORTENER_PUBLISH_TOKEN }}
+          poetry publish --build
+        working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
 
       - name: Wait for package availability
-        if: steps.check_file.outcome == 'success'
         run: |
           while true; do
-            if pip install neojelll-url-shortener-${{ env.DIRECTORY }}==${{ env.VERSION }} --dry-run; then
+            if pip install neojelll-url-shortener-${{ needs.check_pyproject.outputs.DIRECTORY }}==${{ env.VERSION }} --dry-run; then
               echo "The ${{ env.VERSION }} version is available for installation."
               break
             else
@@ -86,9 +98,8 @@ jobs:
           done
 
       - name: Build docker image and publish
-        if: steps.check_file.outcome == 'success'
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io --username neojelll --password-stdin
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-${{ env.DIRECTORY }}:${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-${{ env.DIRECTORY }}:latest --push .
-        working-directory: ${{ env.DIRECTORY }}
+          docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-${{ needs.check_pyproject.outputs.DIRECTORY }}:${{ env.VERSION }} -t ghcr.io/neojelll/url-shortener-${{ needs.check_pyproject.outputs.DIRECTORY }}:latest --push .
+        working-directory: ${{ needs.check_pyproject.outputs.DIRECTORY }}
