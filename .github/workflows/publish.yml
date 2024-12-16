@@ -28,12 +28,11 @@ jobs:
           echo "Checking in directory: ${DIRECTORY}"
           if [ ! -f "${DIRECTORY}/pyproject.toml" ]; then
             echo "File pyproject.toml not found in ${DIRECTORY}. Skipping job."
-            echo "PYPROJECT_FOUND=true" >> $GITHUB_ENV
+            echo "PYPROJECT_FOUND=true" >> "$GITHUB_OUTPUT"
           else
             echo "File pyproject.toml found."
-            echo "PYPROJECT_FOUND=false" >> $GITHUB_ENV
+            echo "PYPROJECT_FOUND=false" >> "$GITHUB_OUTPUT"
           fi
-          echo "::set-output name=PYPROJECT_FOUND::${PYPROJECT_FOUND}"
 
   publish:
     runs-on: ubuntu-latest
