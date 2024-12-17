@@ -6,7 +6,7 @@
 ![Static Badge](https://img.shields.io/badge/python-3.12-blue?style=flat-square)
 ![GitHub Repo stars](https://img.shields.io/github/stars/neojelll/url-shortener)
 
-URL-shortener is a service for shortening links so that an ugly long link can be presented as a short, neat link
+A link shortener is a handy tool, long long hair, complex URLs in short places, easy to remember links. Ideal for routing traffic on your social media pages, email campaigns and websites. Simplify your links and track their performance in one place!
 
 ## Use Cases
 
