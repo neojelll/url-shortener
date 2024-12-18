@@ -1,15 +1,14 @@
 from .logger import configure_logger
 from loguru import logger
-
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Depends
 from fastapi.responses import RedirectResponse
-
 from .message_broker import BrokerProducer, BrokerConsumer
 from .db import DataBase
 from .cache import Cache
-
 from urllib.parse import urlparse
-from pydantic import BaseModel
+from .schemas import ShortURLRequestForm, UserCreateForm
+from fastapi.security import OAuth2PasswordRequestForm
+from .auth import verify_password, create_access_token, create_refresh_token
 import uuid
 
 
@@ -24,17 +23,53 @@ def is_valid_url(url: str) -> bool:
     return returned
 
 
-class ShortURLRequest(BaseModel):
-    url: str
-    prefix: str = ''
-    expiration: int = 24
-
-
 app = FastAPI(title='URL Shortener API')
 
 
+@app.post('/auth/register')
+async def registration(user: UserCreateForm):
+    logger.debug(f'Start registration with params: {user}')
+    async with DataBase() as db:
+        await db.create_user(user)
+        logger.debug('Registration was successful')
+    return {'message': 'Registration was succsessful'}
+
+
+@app.post('/auth/login')
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    logger.debug(f'Start login with params: {form_data}')
+    async with DataBase() as db:
+        user = await db.get_user(form_data.username)
+        if not user:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Incorrect username')
+        elif not await verify_password(form_data.password, user.password_hash):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Incorrect password')
+        access_token = await create_access_token(data={'sub': user.username})
+        refresh_token = await create_refresh_token(data={'sub': user.username})
+    return_value = {
+        'message': 'loggin was successful',
+        'access-token': access_token,
+        'refresh-token': refresh_token,
+    }
+    logger.debug(f'Login was successful, return value: {return_value}')
+    return return_value
+
+
+@app.post('/auth/refresh')
+async def refresh(refresh_token: str):
+    logger.debug(f'Start refresh access token with params: {refresh_token}')
+    async with Cache() as cache:
+        username = await cache.check_refresh_token(refresh_token)
+        if username is None:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials')
+    access_token = await create_access_token(data={'sub': username})
+    return_value = {'access-token': access_token}
+    logger.debug(f'Refresh was successful, return value: {return_value}')
+    return return_value
+
+
 @app.post('/v1/url/shorten')
-async def send_data(data: ShortURLRequest) -> dict[str, str]:
+async def send_data(data: ShortURLRequestForm) -> dict[str, str]:
     logger.debug(f'Start send_data... params: {repr(data)}')
     long_url = data.url
 
